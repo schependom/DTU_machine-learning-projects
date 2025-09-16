@@ -327,3 +327,8 @@ TSWLatexianTemp*
 
 # Ignore macOS system files
 .DS_Store
+.Rproj.user
+
+.RData
+.Rhistory
+*.Rproj
