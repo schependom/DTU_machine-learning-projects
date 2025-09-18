@@ -1,10 +1,13 @@
 \documentclass[dtu]{dtuarticle}
+\usepackage{parskip} % use enters instead of indents
+
+\newcommand{\todo}[1]{\color{red}[TODO: #1]\color{black}}
 
 \title{Machine Learning Project 1}
 \subtitle{Data: Feature extraction, and visualization}
 \author{Group 94}
+\course{02452 Machine Learning}
 \address{
-	\textbf{02452 Machine Learning} \\
 	DTU Compute \\
 	Fall 2025
 }
@@ -15,30 +18,80 @@
 	\maketitle
 
 	\begin{table}[h!]
+		\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
 		\centering
 		\begin{tabular}{l | l}
-			Vincent Van Schependom & s251739 \\ \hline
-			Diego Armando Mijares Ledezma & s251777 \\ \hline
-			Albert Joe Jensen & s204601
+			\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
+			Vincent Van Schependom        & s251739                 \\ \hline
+			Diego Armando Mijares Ledezma & s251777                 \\ \hline
+			Albert Joe Jensen             & s204601
 		\end{tabular}
 		\caption{Group members.}
+		\label{table:members}
+	\end{table}
+
+	\begin{table}[h!]
+		\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
+		\centering
+		\begin{tabular}{l | *{3}{|l}}
+			\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
+			Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
+			Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
+			Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
+			Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
+			\LaTeX        & 80\%             & 10\%           & 10\%
+		\end{tabular}
+		\caption{Contributions \& responsabilities table.}
+		\label{table:contributions}
 	\end{table}
 
 	\section*{Introduction}
 
-	...
+	The objective of this report is to apply the methods that were discussed during the first
+	section of the course \textit{Machine Learning} \cite{book} to a chosen dataset. The aim is to get
+	a basic understanding of the data prior to the further analysis (project report 2).
 
-	\section{Section 1}
+	The particular dataset that is being investigated is the \textit{Glass Identification} dataset from 1987 by B. German \cite{dataset}.
 
-	...
+	Table \ref{table:members} lists our full names and student numbers, while Table \ref{table:contributions} shows an overview of the contribution of each team member.
 
-	\section*{Summary}
-
-	...
+	\tableofcontents
 
 	\newpage
 
-	Dit is een test
- 	Esto es una prueba también, pero en español. 
+	\section{The \textit{Glass Identification} dataset}
+
+	\todo{The introduction to the data set.}
+
+	\section{A close look at the different attributes}
+
+	\todo{Detailed explaination of the attributes of the data.}
+
+	\section{Descriptive analysis of the dataset}
+
+	\todo{...}
+
+	\subsection{Extreme values and outliers}
+
+	\todo{...}
+
+	\subsection{Distribution of the attributes}
+
+	\todo{...}
+
+	\subsection{Correlation between attributes}
+
+	\todo{...}
+
+	\section{Principal Component Analysis}
+
+	\todo{...}
+
+	\section*{Summary}
+
+	\todo{A short summary of what we discussed in the whole paper.}
+
+	\bibliography{citations}
+	\bibliographystyle{unsrt}
 
 \end{document}
