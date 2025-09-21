@@ -2,6 +2,10 @@
 \usepackage{parskip} % use enters instead of indents
 
 \newcommand{\todo}[1]{\color{red}[TODO: #1]\color{black}}
+\newcommand*\chem[1]{\ensuremath{\mathrm{#1}}}
+\usepackage{amsmath}
+\usepackage{bm} % bold ITALIC math (for vectors!)
+\usepackage{siunitx}
 
 \title{Machine Learning Project 1}
 \subtitle{Data: Feature extraction, and visualization}
@@ -13,12 +17,13 @@
 }
 \date{\today}
 
+
 \begin{document}
 
 	\maketitle
 
 	\begin{table}[h!]
-		\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
+		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
 		\centering
 		\begin{tabular}{l | l}
 			\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
@@ -31,7 +36,7 @@
 	\end{table}
 
 	\begin{table}[h!]
-		\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
+		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
 		\centering
 		\begin{tabular}{l | *{3}{|l}}
 			\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
@@ -39,7 +44,7 @@
 			Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
 			Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
 			Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
-			\LaTeX        & 80\%             & 10\%           & 10\%
+			\LaTeX        & 90\%             & 5\%           & 5\%
 		\end{tabular}
 		\caption{Contributions \& responsabilities table.}
 		\label{table:contributions}
@@ -51,9 +56,7 @@
 	section of the course \textit{Machine Learning} \cite{book} to a chosen dataset. The aim is to get
 	a basic understanding of the data prior to the further analysis (project report 2).
 
-	The particular dataset that is being investigated is the \textit{Glass Identification} dataset from 1987 by B. German \cite{dataset}.
-
-	Table \ref{table:members} lists our full names and student numbers, while Table \ref{table:contributions} shows an overview of the contribution of each team member.
+	The particular dataset that is being investigated is the \textit{Glass Identification} dataset from 1987 by B. German \cite{dataset}. Table \ref{table:members} lists our full names and student numbers, while Table \ref{table:contributions} shows an overview of the contribution of each team member.
 
 	\tableofcontents
 
@@ -64,6 +67,44 @@
 	\todo{The introduction to the data set.}
 
 	\section{A close look at the different attributes}
+
+	\begin{table}[h!]
+		\centering
+		%\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
+		\begin{tabular}{l|l|l}
+			\textbf{Attribute} & \textbf{Description}                    & \textbf{Type of variable} \\ \hline \hline
+			\texttt{ID}        & Observation ID (excluded from analysis) & Numeric (discrete)        \\ \hline
+			\texttt{RI}        & Refractive Index                        & Continuous                \\ \hline
+			\texttt{Na}        & Sodium oxide ($\chem{Na_2 O}$)          & Continuous                \\ \hline
+			\texttt{Mg}        & Magnesium oxide ($\chem{Mg O}$)         & Continuous                \\ \hline
+			\texttt{Al}        & Aluminum oxide ($\chem{Al_2 O_3}$)      & Continuous                \\ \hline
+			\texttt{Si}        & Silicon oxide ($\chem{Si O_2}$)         & Continuous                \\ \hline
+			\texttt{K}         & Potassium oxide ($\chem{K_2 O}$)        & Continuous                \\ \hline
+			\texttt{Ca}        & Calcium oxide ($\chem{Ca O }$)          & Continuous                \\ \hline
+			\texttt{Ba}        & Barium oxide ($\chem{Ba O}$)            & Continuous                \\ \hline
+			\texttt{Fe}        & Iron oxide ($\chem{Fe_2 O_3}$)          & Continuous                \\ \hline
+			\texttt{type}      & Type of glass                           & Nominal                   \\
+		\end{tabular}
+		\caption{\todo{Fill in.}}
+		\label{table:attributes}
+	\end{table}
+
+	\begin{table}[h!]
+		\centering
+		%\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
+		\begin{tabular}{r|l|l}
+			\textbf{} & \textbf{Abbreviation in dataset} & \textbf{Description}                 \\ \hline \hline
+			1                    & \texttt{BW-FP}                        & Building Window, Float Processed     \\ \hline
+			2                    & \texttt{BW-NFP}                       & Building Window, Non Float Processed \\ \hline
+			3                    & \texttt{VW-FP}                        & Vehicle Window, Float Processed      \\ \hline
+			4                    & \texttt{VW-NFP}                       & Vehicle Window, Non Float Processed  \\ \hline
+			5                    & \texttt{containers}                   & Containers                           \\ \hline
+			6                    & \texttt{tableware}                    & Tableware (e.g. \dots)               \\ \hline
+			7                    & \texttt{headlamps}                    & Headlamps (e.g. \dots)               \\
+		\end{tabular}
+		\caption{\todo{Fill in.}}
+		\label{table:types}
+	\end{table}
 
 	\todo{Detailed explaination of the attributes of the data.}
 
@@ -85,7 +126,39 @@
 
 	\section{Principal Component Analysis}
 
-	\todo{...}
+	\todo{Explain why we standardise.}
+
+	\subsection{Dimension reduction}
+
+	We aim to reduce the 9-dimensional dataset into an $M$-dimensional one (with $M < 9$).
+
+	\todo{How many PC's do we keep? I think $M=5$.}
+
+	\subsection{Principal directions}
+
+	The \textit{principal directions} of the (first $M$) principal components are the rotations, corresponding to each principal component $\text{PC}_i = \bm{v_i}$ in the transform-matrix $\bm{V}_M$. This matrix is used when computing the projected coordinates $\bm{B} = \bm{V}_M \bm{X}$ of the original data $\bm{X}$ onto the subspace spanned by the first $M$ principal components.
+
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{r | *{3}{|r}}
+			\textbf{Variable} & $\textbf{PC}_1$ & ... & $\textbf{PC}_M = \textbf{PC}_{5??}$ \\ \hline \hline
+			\texttt{RI} & \num{0} & ... & \num{0} \\
+			\texttt{Na} & \num{0} & ... & \num{0} \\
+			\texttt{Mg} & \num{0} & ... & \num{0} \\
+			\texttt{Al} & \num{0} & ... & \num{0} \\
+			\texttt{Si} & \num{0} & ... & \num{0} \\
+			\texttt{K} & \num{0} & ... & \num{0} \\
+			\texttt{Ca} & \num{0} & ... & \num{0} \\
+			\texttt{Ba} & \num{0} & ... & \num{0} \\
+			\texttt{Fe} & \num{0} & ... & \num{0}
+		\end{tabular}
+		\caption{The principal directions (a.k.a. the \textit{loadings}) of the first $M$ principal components $\text{PC}_i = \bm{v_i}$ in the rotation matrix $\bm{V}_M$. \todo{Describe what these directions mean in terms of the original attributes.}}
+		\label{table:loadings}
+	\end{table}
+
+	\subsection{Projected data}
+
+	\todo{Visualisations of the projected data}
 
 	\section*{Summary}
 

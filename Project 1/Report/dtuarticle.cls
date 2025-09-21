@@ -45,7 +45,7 @@
 \setlength{\oddsidemargin}{-1in}
 \addtolength{\oddsidemargin}{3cm}
 \setlength{\textwidth}{16cm}
-\setlength{\textheight}{23.5cm}
+\setlength{\textheight}{22.5cm}
 \RequirePackage{fancyhdr}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
@@ -86,7 +86,7 @@
                    \end{tabular}};
          \node[anchor=south west] at (3,24) {
 					 \begin{tabular}{@{}l@{}}
-									\large \thedate\vphantom{Ky}
+									\large \thedate\vphantom{Ky}\\
 							   \end{tabular}};
          \fill[grijs]  (3,23.66) rectangle ( 19,23.7);
       \end{tikzpicture}
