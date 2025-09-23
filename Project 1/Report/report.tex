@@ -68,7 +68,7 @@
 				Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
 				Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
 				Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
-				Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
+				Section 4     & 70\%             & 15\%           & 15\%			\\ \hline
 				\LaTeX        & 90\%             & 5\%           & 5\%
 			\end{tabular}
 			\caption{Contributions \& responsabilities table.}
@@ -225,9 +225,79 @@
 		\label{table:loadings}
 	\end{table}
 
+<<<<<<< Updated upstream
 	\subsection{Projected data}
 
 	\todo{Visualisations of the projected data}
+=======
+	\begin{figure}
+		\centering
+		\includegraphics[width=.99\textwidth]{figures/pca_component_coefficients}
+		\caption{Loadings of the original variables on the first five principal components. Positive and negativ values indicate the \textit{direction} of influence, while the magnitude reflects the \textit{strength} of the contribution.}
+		\label{fig:pc-components}
+	\end{figure}
+
+	Based on the loadings in Table \ref{table:loadings} and the corresponding visualisation in Figure \ref{fig:pc-components}, the first principal component ($\text{PC}_0$) is most strongly influenced by \texttt{RI} and \texttt{Ca}, which carry positive loadings, and negatively by \texttt{Al} and \texttt{Si}. This suggests that $\text{PC}_0$ captures a trade-off between refractive index and calcium content versus aluminium and silicon.
+
+%	Shortened version of the stuff that is beneath this comment:
+%	The second principal component ($\text{PC}_1$) places strong weight on \texttt{Mg} and negative weight on \texttt{Ba}, indicating a contrast between magnesium and barium content. Later components highlight more specific variations, such as $\text{PC}_4$, which is dominated by \texttt{Fe}, pointing to a component that largely isolates variation in iron concentration.
+
+	\todo{Check all loadings and the text below.}
+
+	The second principal component ($\text{PC}_1$) assigns a large positive loading to \texttt{Mg}, while strongly down-weighting \texttt{Ba} and, to a lesser degree, \texttt{Na}. This indicates that $\text{PC}_1$ primarily reflects a contrast between magnesium concentration and the presence of barium and sodium.
+
+	The third principal component ($\text{PC}_2$) is dominated by a large positive loading for \texttt{K}, balanced by strong negative contributions from \texttt{Si} and \texttt{Na}. This points to a dimension that separates potassium-rich compositions from those with higher silica and sodium content.
+
+	The fourth principal component ($\text{PC}_3$) shows high positive contributions from \texttt{Si}, \texttt{Ca}, and \texttt{Fe}, with negative influence from \texttt{Mg} and \texttt{Na}. It therefore captures variation where higher levels of silicon, calcium, and iron occur together in opposition to magnesium and sodium.
+
+	Finally, the fifth principal component ($\text{PC}_4$) is characterised by a dominant positive loading for \texttt{Fe}, while moderately influenced by \texttt{Ba} and negatively by \texttt{K}. This indicates that $\text{PC}_4$ primarily isolates variation in iron concentration, with some contribution from the balance between barium and potassium.
+
+	\subsection{Projected data}
+
+	\subsubsection{Biplots}
+
+	The projection of the standardised dataset onto the principal component axes produces a lower-dimensional representation that can be visualised in two-dimensional \textit{biplots}. In these plots:
+
+	\begin{itemize}
+		\item Each point corresponds to a \textit{score}, representing the coordinates of an original observation in the space spanned by the selected principal components. The scores have been \textit{rescaled} to the interval $[-1,1]$ to facilitate comparison with the arrows, representing variable loadings.
+		\item The arrows correspond to the \textit{loadings}, i.e., the contributions of the original variables to the principal components. The direction of an arrow indicates how the variable influences the component axes, and its length reflects the magnitude of this influence.
+	\end{itemize}
+
+	Together, scores and loadings allow for simultaneous interpretation of both the observations and the variables.
+
+	\subsubsection{Interpretation based on glass types}
+
+	Figure~\ref{fig:biplots} shows two biplot visualisations. In the first biplot (PC1 vs.\ PC2), which captures \SI{50}{\percent} of the variance, the dominant trends in the data are visible, and some separation between glass types can be observed \todo{explain}. For the second biplot, \todo{fill out.}
+
+	\todo{Make the text below more specific (this is just general GPT-generated stuff)}
+
+	The projected scores reveal that some classes, such as \texttt{BW-FP} and \texttt{R}, cluster distinctly in the reduced space, whereas others, such as \texttt{LW-FP} and \texttt{GL}, exhibit more overlap. The loadings indicate that the separation of classes along the axes is largely driven by specific chemical compositions; for example, PC1 contrasts samples with high \texttt{RI} and \texttt{Ca} against those with higher \texttt{Al} and \texttt{Si}, explaining why some classes separate along this component. \todo{Explain the concrete projections of the different classes further.}
+
+	\begin{figure}[h!]
+		\centering
+		\begin{subfigure}{0.49\textwidth}
+			\includegraphics[width=\linewidth]{figures/pca_biplot_pc1_pc2.pdf}
+			\caption{PC1 vs PC2}
+			\label{fig:biplot_pc1_pc2}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.49\textwidth}
+			\includegraphics[width=\linewidth]{figures/pca_biplot_pc2_pc3.pdf}
+			\caption{PC2 vs PC3}
+			\label{fig:biplot_pc1_pc3}
+		\end{subfigure}
+		\caption{Biplots of the glass dataset showing both projected samples (colored by class) and variable loadings.}
+		\label{fig:biplots}
+	\end{figure}
+
+	\subsubsection{Extreme scores}
+
+	\todo{Explain the observations that score extremely high/low in certain principal directions.}
+
+	\section{Use of GenAI}
+
+	\todo{Explain what kind of GenAI you used.}
+>>>>>>> Stashed changes
 
 	\section*{Summary}
 
