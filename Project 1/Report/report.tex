@@ -153,12 +153,27 @@
 
 	\todo{Mention boxplots.}
 
+	\begin{figure}
+		\centering
+		\includegraphics[width=.8\textwidth]{figures/boxplots}
+		\caption{Boxplots of the refractive index (\texttt{RI}) and the 8 oxides.}
+		\label{fig:boxplots}
+	\end{figure}
+
 	\subsection{Distribution of the attributes}
+
 	\label{section:distribution}
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=.8\textwidth]{figures/histograms}
+		\caption{Relative frequency histograms for the nine numerical attributes. \todo{Describe the general distributions.}}
+		\label{fig:histograms}
+	\end{figure}
 
 	\textit{Note that there are no non-float processed vehicle windows!} (\#\texttt{VW-NFP}=0)
 
-	\todo{Mention the histograms.}
+	\todo{Mention the histograms and maybe the boxplots, too.} (Figure \verb*|\ref{fig:histograms}|)
 
 	\begin{table}[h!]
 		\centering
@@ -200,7 +215,24 @@
 
 	\todo{Fill out this section.}
 
-	\todo{Reference the matrix correlation plot.}
+	\begin{figure}[h!]
+		\centering
+		\begin{subfigure}{.49\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{figures/correlation_matrix}
+			\caption{Correlation matrix for the nine numerical attributes.}
+			\label{fig:correlation}
+		\end{subfigure}
+		\begin{subfigure}{.49\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{figures/scatter_RI_vs_Ca}
+			\caption{Individual correlation between \texttt{RI} and \texttt{Ca}}
+			\label{fig:individual-correlation}
+		\end{subfigure}
+		\caption{Whole correlation matrix and individual correlation between \texttt{RI} and \texttt{Ca}.}
+	\end{figure}
+
+	\todo{Reference the matrix correlation plot.}  (Figure \verb*|\ref{fig:correlation}|)
 
 	\section{Principal Component Analysis}
 
@@ -308,7 +340,7 @@
 
 	\section{Use of GenAI}
 
-	\todo{Explain what kind of GenAI you used.}
+	Keep in the back of your mind for what you used GenAI and add it at the end.
 
 	\section*{Summary}
 
@@ -317,12 +349,12 @@
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
 
-	\newpage
+%	\newpage
+%
+%	\appendix
+%
+%	\LARGE\bfseries Appendix
 
-	\appendix
-
-	\LARGE\bfseries Appendix
-
-	\section{Test}
+%	\section{Test}
 
 \end{document}
