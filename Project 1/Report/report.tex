@@ -6,6 +6,7 @@
 \usepackage{amsmath}
 \usepackage{bm} % bold ITALIC math (for vectors!)
 \usepackage{siunitx}
+\usepackage{subcaption}
 
 \title{Machine Learning Project 1}
 \subtitle{Data: Feature extraction, and visualization}
@@ -22,32 +23,58 @@
 
 	\maketitle
 
-	\begin{table}[h!]
-		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
-		\centering
-		\begin{tabular}{l | l}
-			\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
-			Vincent Van Schependom        & s251739                 \\ \hline
-			Diego Armando Mijares Ledezma & s251777                 \\ \hline
-			Albert Joe Jensen             & s204601
-		\end{tabular}
-		\caption{Group members.}
-		\label{table:members}
-	\end{table}
+%	\begin{table}[h!]
+%		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
+%		\centering
+%		\begin{tabular}{l | l}
+%			\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
+%			Vincent Van Schependom        & s251739                 \\ \hline
+%			Diego Armando Mijares Ledezma & s251777                 \\ \hline
+%			Albert Joe Jensen             & s204601
+%		\end{tabular}
+%		\caption{Group members.}
+%		\label{table:members}
+%	\end{table}
+%
+%	\begin{table}[h!]
+%		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
+%		\centering
+%		\begin{tabular}{l | *{3}{|l}}
+%			\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
+%			Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
+%			Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
+%			Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
+%			Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
+%			\LaTeX        & 90\%             & 5\%           & 5\%
+%		\end{tabular}
+%		\caption{Contributions \& responsabilities table.}
+%		\label{table:contributions}
+%	\end{table}
 
 	\begin{table}[h!]
-		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
-		\centering
-		\begin{tabular}{l | *{3}{|l}}
-			\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
-			Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
-			Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
-			Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
-			Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
-			\LaTeX        & 90\%             & 5\%           & 5\%
-		\end{tabular}
-		\caption{Contributions \& responsabilities table.}
-		\label{table:contributions}
+		\begin{subtable}{.58\textwidth}
+			\begin{tabular}{l | l}
+				\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
+				Vincent Van Schependom        & s251739                 \\ \hline
+				Diego Armando Mijares Ledezma & s251777                 \\ \hline
+				Albert Joe Jensen             & s204601
+			\end{tabular}
+			\caption{Group members.}
+			\label{table:members}
+		\end{subtable}
+		\begin{subtable}{.4\textwidth}
+			\begin{tabular}{l | *{3}{|l}}
+				\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
+				Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
+				Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
+				Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
+				Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
+				\LaTeX        & 90\%             & 5\%           & 5\%
+			\end{tabular}
+			\caption{Contributions \& responsabilities table.}
+			\label{table:contributions}
+		\end{subtable}
+		\caption{Group information \& work distribution.}
 	\end{table}
 
 	\section*{Introduction}
@@ -68,7 +95,7 @@
 
 	\section{A close look at the different attributes}
 
-	\begin{table}[h!]
+	\begin{table}
 		\centering
 		%\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
 		\begin{tabular}{l|l|l}
@@ -89,18 +116,18 @@
 		\label{table:attributes}
 	\end{table}
 
-	\begin{table}[h!]
+	\begin{table}
 		\centering
 		%\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
 		\begin{tabular}{r|l|l}
-			\textbf{} & \textbf{Abbreviation in dataset} & \textbf{Description}                 \\ \hline \hline
-			1                    & \texttt{BW-FP}                        & Building Window, Float Processed     \\ \hline
-			2                    & \texttt{BW-NFP}                       & Building Window, Non Float Processed \\ \hline
-			3                    & \texttt{VW-FP}                        & Vehicle Window, Float Processed      \\ \hline
-			4                    & \texttt{VW-NFP}                       & Vehicle Window, Non Float Processed  \\ \hline
-			5                    & \texttt{containers}                   & Containers                           \\ \hline
-			6                    & \texttt{tableware}                    & Tableware (e.g. \dots)               \\ \hline
-			7                    & \texttt{headlamps}                    & Headlamps (e.g. \dots)               \\
+			\textbf{} & \textbf{Abbreviation in dataset} & \textbf{Description}                 \\ \hline\hline
+			        1 & \texttt{BW-FP}                   & Building Window, Float Processed     \\ \hline
+			        2 & \texttt{BW-NFP}                  & Building Window, Non Float Processed \\ \hline
+			        3 & \texttt{VW-FP}                   & Vehicle Window, Float Processed      \\ \hline
+			        4 & \texttt{VW-NFP}                  & Vehicle Window, Non Float Processed  \\ \hline
+			        5 & \texttt{containers}              & Containers                           \\ \hline
+			        6 & \texttt{tableware}               & Tableware (e.g. \dots)               \\ \hline
+			        7 & \texttt{headlamps}               & Headlamps (e.g. \dots)
 		\end{tabular}
 		\caption{\todo{Fill in.}}
 		\label{table:types}
@@ -114,11 +141,51 @@
 
 	\subsection{Extreme values and outliers}
 
+	\textbf{Note that the IQR `rule' is not a ground truth, but rather a way to detect \textit{possible} outliers.}
+
 	\todo{...}
 
 	\subsection{Distribution of the attributes}
+	\label{section:distribution}
+
+	\textbf{Note that there are no non-float processed vehicle windows! (\#\texttt{VW-NFP}=0)}
 
 	\todo{...}
+
+	\begin{table}[h!]
+		\begin{subtable}{0.6\textwidth}
+			\begin{tabular}{r | *{6}{| r}}
+				            & \textbf{Mean} & \textbf{Std.} & \textbf{Min} & \textbf{Max} & \textbf{Skew} & \textbf{Kurtosis} \\ \hline\hline
+				\texttt{RI} &               &               &              &              &               &                   \\ \hline
+				\texttt{Na} &               &               &              &              &               &                   \\ \hline
+				\texttt{Mg} &               &               &              &              &               &                   \\ \hline
+				\texttt{Al} &               &               &              &              &               &                   \\ \hline
+				\texttt{Si} &               &               &              &              &               &                   \\ \hline
+				 \texttt{K} &               &               &              &              &               &                   \\ \hline
+				\texttt{Ca} &               &               &              &              &               &                   \\ \hline
+				\texttt{Ba} &               &               &              &              &               &                   \\ \hline
+				\texttt{Fe} &               &               &              &              &               &
+			\end{tabular}
+			\caption{Summary statistics.}
+			\label{table:summary-stats}
+		\end{subtable}
+		\hspace*{0\textwidth}
+		\begin{subtable}{.3\textwidth}
+			\begin{tabular}{r|l|l|l}
+				  & \texttt{type}       & \textbf{Cnt.} & \textbf{Freq.} \\ \hline\hline
+				1 & \texttt{BW-FP}      &                &                \\ \hline
+				2 & \texttt{BW-NFP}     &                &                \\ \hline
+				3 & \texttt{VW-FP}      &                &                \\ \hline
+				4 & \texttt{VW-NFP}     &                &                \\ \hline
+				5 & \texttt{containers} &                &                \\ \hline
+				6 & \texttt{tableware}  &                &                \\ \hline
+				7 & \texttt{headlamps}  &                &
+			\end{tabular}
+			\caption{Absolute and relative frequencies of \texttt{type}.}
+			\label{table:frequencies}
+		\end{subtable}
+		\caption{\todo{Fill in.}}
+	\end{table}
 
 	\subsection{Correlation between attributes}
 
@@ -127,6 +194,8 @@
 	\section{Principal Component Analysis}
 
 	\todo{Explain why we standardise.}
+
+	Because the attributes are on completely different scales (Section \ref{section:distribution}), we standardise the variables by subtracting their mean and subsequently dividing by the standard deviation.
 
 	\subsection{Dimension reduction}
 
