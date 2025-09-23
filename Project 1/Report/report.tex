@@ -23,33 +23,33 @@
 
 	\maketitle
 
-%	\begin{table}[h!]
-%		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
-%		\centering
-%		\begin{tabular}{l | l}
-%			\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
-%			Vincent Van Schependom        & s251739                 \\ \hline
-%			Diego Armando Mijares Ledezma & s251777                 \\ \hline
-%			Albert Joe Jensen             & s204601
-%		\end{tabular}
-%		\caption{Group members.}
-%		\label{table:members}
-%	\end{table}
-%
-%	\begin{table}[h!]
-%		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
-%		\centering
-%		\begin{tabular}{l | *{3}{|l}}
-%			\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
-%			Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
-%			Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
-%			Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
-%			Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
-%			\LaTeX        & 90\%             & 5\%           & 5\%
-%		\end{tabular}
-%		\caption{Contributions \& responsabilities table.}
-%		\label{table:contributions}
-%	\end{table}
+	%	\begin{table}[h!]
+		%		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
+		%		\centering
+		%		\begin{tabular}{l | l}
+			%			\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
+			%			Vincent Van Schependom        & s251739                 \\ \hline
+			%			Diego Armando Mijares Ledezma & s251777                 \\ \hline
+			%			Albert Joe Jensen             & s204601
+			%		\end{tabular}
+		%		\caption{Group members.}
+		%		\label{table:members}
+		%	\end{table}
+	%
+	%	\begin{table}[h!]
+		%		\renewcommand{\arraystretch}{1.1} % make the spacing a bit nicer
+		%		\centering
+		%		\begin{tabular}{l | *{3}{|l}}
+			%			\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
+			%			Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
+			%			Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
+			%			Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
+			%			Section 4     & 30\%             & 30\%           & 40\%			\\ \hline
+			%			\LaTeX        & 90\%             & 5\%           & 5\%
+			%		\end{tabular}
+		%		\caption{Contributions \& responsabilities table.}
+		%		\label{table:contributions}
+		%	\end{table}
 
 	\begin{table}[h!]
 		\begin{subtable}{.58\textwidth}
@@ -68,7 +68,7 @@
 				Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
 				Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
 				Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
-				Section 4     & 70\%             & 15\%           & 15\%			\\ \hline
+				Section 4     & 80\%             & 10\%           & 10\%			\\ \hline
 				\LaTeX        & 90\%             & 5\%           & 5\%
 			\end{tabular}
 			\caption{Contributions \& responsabilities table.}
@@ -121,13 +121,13 @@
 		%\renewcommand{\arraystretch}{1.3} % make the spacing a bit nicer
 		\begin{tabular}{r|l|l}
 			\textbf{} & \textbf{Abbreviation in dataset} & \textbf{Description}                 \\ \hline\hline
-			        1 & \texttt{BW-FP}                   & Building Window, Float Processed     \\ \hline
-			        2 & \texttt{BW-NFP}                  & Building Window, Non Float Processed \\ \hline
-			        3 & \texttt{VW-FP}                   & Vehicle Window, Float Processed      \\ \hline
-			        4 & \texttt{VW-NFP}                  & Vehicle Window, Non Float Processed  \\ \hline
-			        5 & \texttt{containers}              & Containers                           \\ \hline
-			        6 & \texttt{tableware}               & Tableware (e.g. \dots)               \\ \hline
-			        7 & \texttt{headlamps}               & Headlamps (e.g. \dots)
+			1 & \texttt{BW-FP}                   & Building Window, Float Processed     \\ \hline
+			2 & \texttt{BW-NFP}                  & Building Window, Non Float Processed \\ \hline
+			3 & \texttt{VW-FP}                   & Vehicle Window, Float Processed      \\ \hline
+			4 & \texttt{VW-NFP}                  & Vehicle Window, Non Float Processed  \\ \hline
+			5 & \texttt{containers}              & Containers                           \\ \hline
+			6 & \texttt{tableware}               & Tableware (e.g. \dots)               \\ \hline
+			7 & \texttt{headlamps}               & Headlamps (e.g. \dots)
 		\end{tabular}
 		\caption{\todo{Fill in.}}
 		\label{table:types}
@@ -135,33 +135,42 @@
 
 	\todo{Detailed explaination of the attributes of the data.}
 
+	\todo{Mention the tables} (\verb*|\ref{table:attributes}| and \verb*|\ref{table:types}|)
+
 	\section{Descriptive analysis of the dataset}
 
-	\todo{...}
+	\todo{Write this section.}
+
+	\todo{Mention the tables} (\verb*|\ref{table:summary-stats}| and \verb*|\ref{table:frequencies}|)
+
+	\todo{Put boxplots, histograms.}
 
 	\subsection{Extreme values and outliers}
 
-	\textbf{Note that the IQR `rule' is not a ground truth, but rather a way to detect \textit{possible} outliers.}
+	\textit{Note that the IQR `rule' is not a ground truth, but rather a way to detect \textit{possible} outliers.}
 
-	\todo{...}
+	\todo{Write this section.}
+
+	\todo{Mention boxplots.}
 
 	\subsection{Distribution of the attributes}
 	\label{section:distribution}
 
-	\textbf{Note that there are no non-float processed vehicle windows! (\#\texttt{VW-NFP}=0)}
+	\textit{Note that there are no non-float processed vehicle windows!} (\#\texttt{VW-NFP}=0)
 
-	\todo{...}
+	\todo{Mention the histograms.}
 
 	\begin{table}[h!]
+		\centering
 		\begin{subtable}{0.6\textwidth}
 			\begin{tabular}{r | *{6}{| r}}
-				            & \textbf{Mean} & \textbf{Std.} & \textbf{Min} & \textbf{Max} & \textbf{Skew} & \textbf{Kurtosis} \\ \hline\hline
+				& \textbf{Mean} & \textbf{Std.} & \textbf{Min} & \textbf{Max} & \textbf{Skew} & \textbf{Kurtosis} \\ \hline\hline
 				\texttt{RI} &               &               &              &              &               &                   \\ \hline
 				\texttt{Na} &               &               &              &              &               &                   \\ \hline
 				\texttt{Mg} &               &               &              &              &               &                   \\ \hline
 				\texttt{Al} &               &               &              &              &               &                   \\ \hline
 				\texttt{Si} &               &               &              &              &               &                   \\ \hline
-				 \texttt{K} &               &               &              &              &               &                   \\ \hline
+				\texttt{K} &               &               &              &              &               &                   \\ \hline
 				\texttt{Ca} &               &               &              &              &               &                   \\ \hline
 				\texttt{Ba} &               &               &              &              &               &                   \\ \hline
 				\texttt{Fe} &               &               &              &              &               &
@@ -172,7 +181,7 @@
 		\hspace*{0\textwidth}
 		\begin{subtable}{.3\textwidth}
 			\begin{tabular}{r|l|l|l}
-				  & \texttt{type}       & \textbf{Cnt.} & \textbf{Freq.} \\ \hline\hline
+				& \texttt{type}       & \textbf{Cnt.} & \textbf{Freq.} \\ \hline\hline
 				1 & \texttt{BW-FP}      &                &                \\ \hline
 				2 & \texttt{BW-NFP}     &                &                \\ \hline
 				3 & \texttt{VW-FP}      &                &                \\ \hline
@@ -189,45 +198,49 @@
 
 	\subsection{Correlation between attributes}
 
-	\todo{...}
+	\todo{Fill out this section.}
+
+	\todo{Reference the matrix correlation plot.}
 
 	\section{Principal Component Analysis}
 
-	\todo{Explain why we standardise.}
+	\subsection{Need for standardisation}
 
-	Because the attributes are on completely different scales (Section \ref{section:distribution}), we standardise the variables by subtracting their mean and subsequently dividing by the standard deviation.
+	Since the attributes are expressed on different numerical scales (see Section \ref{section:distribution}), the variables are standardised by subtracting the mean and dividing by the standard deviation. This ensures that no single attribute dominates the analysis merely due to its scale.
 
 	\subsection{Dimension reduction}
 
-	We aim to reduce the 9-dimensional dataset into an $M$-dimensional one (with $M < 9$).
+	\begin{figure}[h!]
+		\includegraphics[width=.9\textwidth]{figures/pca_explained_variance}
+		\caption{Explained (cumulative) variances for the 9 principal components $\bm{v}_0,\ldots,\bm{v}_8$}.
+		\label{fig:explained-var}
+	\end{figure}
 
-	\todo{How many PC's do we keep? I think $M=5$.}
+	The goal is to reduce the original 9-dimensional dataset to an $M$-dimensional representation with $M < 9$, using the first $M$ principal components $\bm{v}_0,\ldots,\bm{v}_{M-1}$. As shown in Figure \ref{fig:explained-var}, selecting $M=5$ principal components explains \SI{89.31}{\percent} of the total variance. By increasing the dimensionality to $M=7$, as much as \SI{99.27}{\percent} of the variance can be retained, essentially preserving almost all of the original information.
+
+	Choosing $M=5$ provides a balance between dimensionality reduction and information retention. While $M=7$ captures nearly all of the variance, the marginal gain in explained variance beyond the first five components is relatively small compared to the added complexity. Retaining five dimensions reduces computational cost, simplifies subsequent analysis, and removes noise while still preserving the majority of the data's variability.
 
 	\subsection{Principal directions}
 
-	The \textit{principal directions} of the (first $M$) principal components are the rotations, corresponding to each principal component $\text{PC}_i = \bm{v_i}$ in the transform-matrix $\bm{V}_M$. This matrix is used when computing the projected coordinates $\bm{B} = \bm{V}_M \bm{X}$ of the original data $\bm{X}$ onto the subspace spanned by the first $M$ principal components.
+	The \textit{principal directions} of the first $M$ principal components are defined by the eigenvectors $\bm{v}_i$ that span the subspace of reduced dimensionality. These vectors form the transformation matrix $\bm{V}_M$, which is applied to the standardised data $\bm{X}$ to obtain the projected representation $\bm{B} = \bm{V}_M \bm{X}$. The new coordinates $\bm{B}$ capture the structure of the data in fewer dimensions while emphasising the directions of greatest variance.
 
 	\begin{table}[h!]
 		\centering
-		\begin{tabular}{r | *{3}{|r}}
-			\textbf{Variable} & $\textbf{PC}_1$ & ... & $\textbf{PC}_M = \textbf{PC}_{5??}$ \\ \hline\hline
-			      \texttt{RI} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Na} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Mg} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Al} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Si} & \num{0}         & ... &                             \num{0} \\
-			       \texttt{K} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Ca} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Ba} & \num{0}         & ... &                             \num{0} \\
-			      \texttt{Fe} & \num{0}         & ... &                             \num{0}
+		\begin{tabular}{r | *{5}{|r}}
+			\textbf{Variable} & $\textbf{PC}_0$ & $\textbf{PC}_1$ & $\textbf{PC}_2$ & $\textbf{PC}_3$ & $\textbf{PC}_4$ \\ \hline\hline
+			\texttt{RI} & \num{0.545}     &          -0.286 &           0.087 &          -0.147 &          -0.074 \\
+			\texttt{Na} & -0.258          &          -0.270 &          -0.385 &          -0.491 &           0.154 \\
+			\texttt{Mg} & 0.111           &           0.594 &           0.008 &          -0.379 &           0.124 \\
+			\texttt{Al} & -0.429          &          -0.295 &           0.329 &           0.138 &           0.014 \\
+			\texttt{Si} & -0.229          &           0.155 &          -0.459 &           0.653 &           0.009 \\
+			\texttt{K} & -0.219          &           0.154 &           0.663 &           0.039 &          -0.307 \\
+			\texttt{Ca} & 0.492           &          -0.345 &          -0.001 &           0.276 &          -0.188 \\
+			\texttt{Ba} & -0.250          &          -0.485 &           0.074 &          -0.133 &           0.251 \\
+			\texttt{Fe} & 0.186           &           0.062 &           0.284 &           0.230 &           0.873
 		\end{tabular}
-		\caption{The principal directions (a.k.a. the \textit{loadings}) of the first $M$ principal components $\text{PC}_i = \bm{v_i}$ in the rotation matrix $\bm{V}_M$. \todo{Describe what these directions mean in terms of the original attributes.}}
+		\caption{The principal directions (a.k.a. the \textit{loadings}) of the first $M=5$ principal components $\text{PC}_i = \bm{v}_i$ in the rotation matrix $\bm{V}_M$. Larger absolute values indicate stronger influence of a variable on a given component.}
 		\label{table:loadings}
 	\end{table}
-
-	\subsection{Projected data}
-
-	\todo{Visualisations of the projected data}
 
 	\begin{figure}
 		\centering
@@ -238,10 +251,10 @@
 
 	Based on the loadings in Table \ref{table:loadings} and the corresponding visualisation in Figure \ref{fig:pc-components}, the first principal component ($\text{PC}_0$) is most strongly influenced by \texttt{RI} and \texttt{Ca}, which carry positive loadings, and negatively by \texttt{Al} and \texttt{Si}. This suggests that $\text{PC}_0$ captures a trade-off between refractive index and calcium content versus aluminium and silicon.
 
-%	Shortened version of the stuff that is beneath this comment:
-%	The second principal component ($\text{PC}_1$) places strong weight on \texttt{Mg} and negative weight on \texttt{Ba}, indicating a contrast between magnesium and barium content. Later components highlight more specific variations, such as $\text{PC}_4$, which is dominated by \texttt{Fe}, pointing to a component that largely isolates variation in iron concentration.
+	%	Shortened version of the stuff that is beneath this comment:
+	%	The second principal component ($\text{PC}_1$) places strong weight on \texttt{Mg} and negative weight on \texttt{Ba}, indicating a contrast between magnesium and barium content. Later components highlight more specific variations, such as $\text{PC}_4$, which is dominated by \texttt{Fe}, pointing to a component that largely isolates variation in iron concentration.
 
-	\todo{Check all loadings and the text below.}
+	\todo{Review all the stuff that is below and check for errors.}
 
 	The second principal component ($\text{PC}_1$) assigns a large positive loading to \texttt{Mg}, while strongly down-weighting \texttt{Ba} and, to a lesser degree, \texttt{Na}. This indicates that $\text{PC}_1$ primarily reflects a contrast between magnesium concentration and the presence of barium and sodium.
 
@@ -268,7 +281,7 @@
 
 	Figure~\ref{fig:biplots} shows two biplot visualisations. In the first biplot (PC1 vs.\ PC2), which captures \SI{50}{\percent} of the variance, the dominant trends in the data are visible, and some separation between glass types can be observed \todo{explain}. For the second biplot, \todo{fill out.}
 
-	\todo{Make the text below more specific (this is just general GPT-generated stuff)}
+	\todo{Check the paragraph below and fill out further.}
 
 	The projected scores reveal that some classes, such as \texttt{BW-FP} and \texttt{R}, cluster distinctly in the reduced space, whereas others, such as \texttt{LW-FP} and \texttt{GL}, exhibit more overlap. The loadings indicate that the separation of classes along the axes is largely driven by specific chemical compositions; for example, PC1 contrasts samples with high \texttt{RI} and \texttt{Ca} against those with higher \texttt{Al} and \texttt{Si}, explaining why some classes separate along this component. \todo{Explain the concrete projections of the different classes further.}
 
@@ -303,5 +316,13 @@
 
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
+
+	\newpage
+
+	\appendix
+
+	\LARGE\bfseries Appendix
+
+	\section{Test}
 
 \end{document}
