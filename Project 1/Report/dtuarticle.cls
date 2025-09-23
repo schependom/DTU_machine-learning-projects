@@ -46,6 +46,7 @@
 \addtolength{\oddsidemargin}{3cm}
 \setlength{\textwidth}{16cm}
 \setlength{\textheight}{22.5cm}
+\setlength{\footskip}{\dimexpr\footskip+0.4cm}
 \RequirePackage{fancyhdr}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
@@ -57,8 +58,8 @@
          \node[anchor=west] at ( 0.5,0.6) {\includegraphics[height=1.5cm]{dtu-logo.pdf}};
       \end{tikzpicture}}
 \lfoot{\begin{tikzpicture}[overlay, inner sep=0mm]
-		\fill[grijs]  (0,1.48) rectangle ( 16,1.5);
-	\end{tikzpicture}
+		\fill[grijs]  (0,1.1) rectangle ( 16,1.12);
+	\end{tikzpicture}\renewcommand{\arraystretch}{0.8}
 	\begin{tabular}[b]{@{}l@{}}
 	\footnotesize{\textbf{Technical University of Denmark} - \thecourse}\\
     \footnotesize{\thetitle} - \footnotesize{\textit{\thesubtitle}}\\
