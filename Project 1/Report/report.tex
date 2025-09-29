@@ -91,9 +91,47 @@
 
 	\section{The \textit{Glass Identification} dataset}
 
-	\todo{The introduction to the data set.}
+	The Glass Identification dataset \cite{dataset} comes from forensic science research in the 1980s, originally compiled at the Institute of Forensic Medicine, with support from the UCI Machine Learning Repository. It was created to help develop methods for identifying types of glass found at crime scenes, such as window glass, containers, or headlamps, based on their chemical makeup. The dataset has been widely shared since its inclusion in the UCI Repository in 1987, and it remains a popular benchmark for testing classification methods in research and teaching.
+
+	\subsection{Previous analysis of the data}
+
+	Several studies have analysed the dataset to improve multi-class classification performance. Zhou et al. applied machine learning techniques in 2023, focusing on optimising Support Vector Machines (SVM) through grid search and Bayesian methods \cite{zhou}. Their optimised SVM model achieved a remarkably high accuracy of 99.25\%, outperforming baseline models such as logistic regression, and demonstrated strong predictive ability when only chemical composition was available.
+
+	In contrast, Bhowmick and Saha concentrated on addressing class imbalance and noisy data, also in 2023 \cite{bhowmick}. They removed outliers using interquartile range filtering, applied ReliefF feature ranking, and balanced classes with SMOTE before training an inverse-distance-weighted k-nearest-neighbor (kNN) classifier. Their improved pipeline reached 78.9\% accuracy with an $F$-measure of 0.791, showing how preprocessing can boost kNN’s effectiveness on this imbalanced dataset.
+
+	\subsection{Goal}
+
+	\todo{Explain, in the context of your problem of interest, what you hope to accom-
+		plish/learn from the data using these techniques?}
+
+	\todo{Explain which attribute you wish to predict in the regression based on which
+		other attributes?}
+
+	\todo{Which class label will you predict based on which other attributes in the classi-
+		fication task?}
+
+	\(\rightarrow\) (\textbf{V:}) The target variable is the type of glass (\texttt{type}), divided into 7 distinct classes. \todo{Complete this and tell that this will be the classification objective blabla.}
+
+	\todo{Describe \textbf{main machine learning aim}: One of these tasks is likely more relevant than the rest and will be denoted the main machine learning aim in the following.}
+
+	\(\rightarrow\) (\textbf{V:}) Mention that it's pretty obvious (and previously mentioned) that the main objective is \textbf{classification}.
+
+	\subsection{Data transformations}
+
+	\todo{Explain if you need to transform individual attribues in order to carry out these
+		tasks (e.g. centering, standardization, discretization, log transform, etc.) and
+		how you plan to do this.}
+
+	\(\rightarrow\) (\textbf{V:}) I would just mention overall standardisation is necessary, since it's all on different scales, a bit like in the PCA section (maybe move the text from there over here, and afterwards say something like ``As we already mentioned in Section ..., standardisation is necessary'' in the PCA section.). Also refer to the boxplots (unscaled and scaled).
 
 	\section{A close look at the different attributes}
+
+	``Assignment: \textit{Describe if the attributes are discrete/continuous and whether they are nominal/or-
+		dinal/interval/ratio.}''
+
+	The data set consists of 214 samples of glass, each characterised by glass type, along with 9 numeric features. There are \textit{no missing values}. The attributes are all presented in Table \ref{table:attributes} and the \texttt{type} attribute is unfolded in Table \ref{table:types}.
+
+	The refractive index (\texttt{RI}), and concentrations of eight different oxides, including sodium (\texttt{Na}), magnesium (\texttt{Mg}), aluminum (\texttt{Al}), silicon (\texttt{Si}), potassium (\texttt{K}), calcium (\texttt{Ca}), barium (\texttt{Ba}), and iron (\texttt{Fe}) all are \textit{continuous} and \todo{ratio or interval}.
 
 	\begin{table}
 		\centering
@@ -133,23 +171,36 @@
 		\label{table:types}
 	\end{table}
 
-	\todo{Detailed explaination of the attributes of the data.}
-
-	\todo{Mention the tables} (\verb*|\ref{table:attributes}| and \verb*|\ref{table:types}|)
-
 	\section{Descriptive analysis of the dataset}
 
-	\todo{Write this section.}
+%	Based on the summary statistics in Table \ref{table:summary-stats}, several attributes in the Glass dataset exhibit high variance or distributional irregularities that could introduce noise. \texttt{Mg} and \texttt{Ca} both have relatively large standard deviations (1.44 and 1.42), indicating wide dispersion compared to other features. \texttt{K} is the most problematic, with a low mean (0.50) but a similarly large standard deviation (0.65), combined with extreme skewness (6.55) and very high kurtosis (54.69), suggesting the presence of rare but extreme outliers. \texttt{Ba} also shows notable skewness (3.42) and kurtosis (12.54), reflecting occasional extreme values against mostly near-zero observations. Fe displays moderate skew (1.75) and kurtosis (2.66), though its absolute values remain small.
+%
+%	These patterns suggest that robust handling, through transformations, scaling, or outlier mitigation, may be most important for \texttt{K}, \texttt{Ba}, and \texttt{Fe}, while \texttt{Mg} and \texttt{Ca} may benefit from normalisation.
 
-	\todo{Mention the tables} (\verb*|\ref{table:summary-stats}| and \verb*|\ref{table:frequencies}|)
+	\subsection{Summary statistics}
+
+	\todo{The assignment is as follows:}
+
+	\textit{``Include relevant summary statistics of the attributes. Reflect on the values.
+		If your data set contains many similar attributes, you may restrict yourself to describing a
+		few representative features (apply common sense). You can place additional results in the
+		appendix if needed.''}
+
+	\todo{Reshuffle the text such that it follows the structure of this \LaTeX document.}
+
+%	Based on the summary statistics in Table \ref{table:summary-stats} and the histograms in Figure \ref{fig:histograms}, several attributes in the Glass dataset display variance patterns or irregular distributions. \texttt{K} is the most problematic, with extreme skewness and heavy tails; its histogram shows many zeros and a few very large outliers, consistent with its high kurtosis.
+%
+%	Ba and \texttt{Fe} follow a similar pattern, with distributions dominated by near-zero values and occasional spikes, making them highly skewed and potentially noisy. \texttt{Mg} exhibits a bimodal distribution, with one cluster near zero and another around 3–4, suggesting that variation may partly reflect differences between glass types, though still requiring careful treatment.
+%
+%	\texttt{Ca} has high spread but a more balanced shape. By contrast, \texttt{RI}, \texttt{Na}, \texttt{Al}, and \texttt{Si} appear roughly symmetric. Transformations (log or Box-Cox), standardization, or winsorization are recommended for skewed features, while Mg’s multimodality may warrant class-sensitive preprocessing.
+
+%	Attributes like \texttt{Na}, \texttt{Si}, and \texttt{Ba} have relatively symmetric boxes and whiskers in their boxplots in Figure \ref{fig:boxplots}, suggesting that they are closer to a normal distribution after standardization. In contrast, \texttt{RI}, \texttt{Mg}, \texttt{Al}, \texttt{K}, and \texttt{Ca} exhibit noticeable skewness and numerous outliers, indicating clear deviations from normality.
 
 	\todo{Put boxplots, histograms.}
 
 	\subsection{Extreme values and outliers}
 
-	\textit{Note that the IQR `rule' is not a ground truth, but rather a way to detect \textit{possible} outliers.}
-
-	\todo{Write this section.}
+	\todo{Reshuffle the text such that it follows the structure of this \LaTeX document.}
 
 	\todo{Mention boxplots.}
 
@@ -162,6 +213,10 @@
 
 	\subsection{Distribution of the attributes}
 
+	\todo{Reshuffle the text such that it follows the structure of this \LaTeX document.}
+
+	The distribution of the glass type - as can be see in Table \ref{table:frequencies} - is imbalanced: 70 float-processed building windows, 76 processed building windows, 17 vehicle windows, 13 containers, 9 tableware, and 29 headlamps. Class 4 (\texttt{VW-NFP}) has no samples
+
 	\label{section:distribution}
 
 	\begin{figure}
@@ -171,45 +226,44 @@
 		\label{fig:histograms}
 	\end{figure}
 
-	\textit{Note that there are no non-float processed vehicle windows!} (\#\texttt{VW-NFP}=0)
-
 	\todo{Mention the histograms and maybe the boxplots, too.} (Figure \verb*|\ref{fig:histograms}|)
 
 	\begin{table}[h!]
 		\centering
-		\begin{subtable}{0.6\textwidth}
+		\begin{subtable}{0.65\textwidth}
 			\begin{tabular}{r | *{6}{| r}}
 				& \textbf{Mean} & \textbf{Std.} & \textbf{Min} & \textbf{Max} & \textbf{Skew} & \textbf{Kurtosis} \\ \hline\hline
-				\texttt{RI} &               &               &              &              &               &                   \\ \hline
-				\texttt{Na} &               &               &              &              &               &                   \\ \hline
-				\texttt{Mg} &               &               &              &              &               &                   \\ \hline
-				\texttt{Al} &               &               &              &              &               &                   \\ \hline
-				\texttt{Si} &               &               &              &              &               &                   \\ \hline
-				\texttt{K} &               &               &              &              &               &                   \\ \hline
-				\texttt{Ca} &               &               &              &              &               &                   \\ \hline
-				\texttt{Ba} &               &               &              &              &               &                   \\ \hline
-				\texttt{Fe} &               &               &              &              &               &
+				\texttt{RI} & 1.518 & 0.003 & 1.511 & 1.534 & 1.625 & 4.932 \\ \hline
+				\texttt{Na} & 13.408 & 0.817 & 10.730 & 17.380 & 0.454 & 3.052 \\ \hline
+				\texttt{Mg} & 2.685 & 1.442 & 0.000 & 4.490 & -1.153 & -0.410 \\ \hline
+				\texttt{Al} & 1.445 & 0.499 & 0.290 & 3.500 & 0.907 & 2.061 \\ \hline
+				\texttt{Si} & 72.651 & 0.775 & 69.810 & 75.410 & -0.730 & 2.968 \\ \hline
+				\texttt{K} & 0.497 & 0.652 & 0.000 & 6.210 & 6.552 & 54.690 \\ \hline
+				\texttt{Ca} & 8.957 & 1.423 & 5.430 & 16.190 & 2.047 & 6.682 \\ \hline
+				\texttt{Ba} & 0.175 & 0.497 & 0.000 & 3.150 & 3.416 & 12.541 \\ \hline
+				\texttt{Fe} & 0.057 & 0.097 & 0.000 & 0.510 & 1.754 & 2.662
 			\end{tabular}
 			\caption{Summary statistics.}
 			\label{table:summary-stats}
 		\end{subtable}
-		\hspace*{0\textwidth}
+		\hspace*{0.02\textwidth}
 		\begin{subtable}{.3\textwidth}
-			\begin{tabular}{r|l|l|l}
+			\begin{tabular}{r|l|r|r}
 				& \texttt{type}       & \textbf{Cnt.} & \textbf{Freq.} \\ \hline\hline
-				1 & \texttt{BW-FP}      &                &                \\ \hline
-				2 & \texttt{BW-NFP}     &                &                \\ \hline
-				3 & \texttt{VW-FP}      &                &                \\ \hline
-				4 & \texttt{VW-NFP}     &                &                \\ \hline
-				5 & \texttt{containers} &                &                \\ \hline
-				6 & \texttt{tableware}  &                &                \\ \hline
-				7 & \texttt{headlamps}  &                &
+				1 & \texttt{BW-FP}      & 70 & 0.327 \\ \hline
+				2 & \texttt{BW-NFP}     & 76 & 0.355 \\ \hline
+				3 & \texttt{VW-FP}      & 17 & 0.079 \\ \hline
+				4 & \texttt{VW-NFP}     & 0  & 0.000 \\ \hline
+				5 & \texttt{containers} & 13 & 0.061 \\ \hline
+				6 & \texttt{tableware}  & 9  & 0.042 \\ \hline
+				7 & \texttt{headlamps}  & 29 & 0.136
 			\end{tabular}
 			\caption{Absolute and relative frequencies of \texttt{type}.}
 			\label{table:frequencies}
 		\end{subtable}
-		\caption{\todo{Fill in.}}
+		\caption{Summary statistics of continuous variables and frequency distribution of glass \texttt{type}.}
 	\end{table}
+
 
 	\subsection{Correlation between attributes}
 
@@ -344,7 +398,10 @@
 
 	\section*{Summary}
 
-	\todo{A short summary of what we discussed in the whole paper.}
+	\todo{Assignment: ``A discussion explaining what you have learned about the data.
+		Summarize the most important things you have learned about the data and give your
+		thoughts on whether your primary machine learning aim appears to be feasible based on
+		your visualization.''}
 
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
