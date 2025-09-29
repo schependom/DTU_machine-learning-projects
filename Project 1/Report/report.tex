@@ -91,7 +91,11 @@
 
 	\section{The \textit{Glass Identification} dataset}
 
-	The Glass Identification dataset \cite{dataset} comes from forensic science research in the 1980s, originally compiled at the Institute of Forensic Medicine, with support from the UCI Machine Learning Repository. It was created to help develop methods for identifying types of glass found at crime scenes, such as window glass, containers, or headlamps, based on their chemical makeup. The dataset has been widely shared since its inclusion in the UCI Repository in 1987, and it remains a popular benchmark for testing classification methods in research and teaching.
+	The Glass Identification dataset comes from forensic science research in the 1980s, originally compiled at the Institute of Forensic Medicine, with support from the UCI Machine Learning Repository \cite{dataset}. It was created to help develop methods for identifying types of glass found at crime scenes, such as window glass, containers, or headlamps, based on their chemical makeup.
+
+	For each of the 214 observations, the measured attributes are the glass \texttt{type}, the refractive index (\texttt{RI}) and 8 different oxides, all of which can be seen in Table \ref{table:attributes}.
+
+%	The dataset has been widely shared since its inclusion in the UCI Repository in 1987, and it remains a popular benchmark for testing classification methods in research and teaching.
 
 	\subsection{Previous analysis of the data}
 
@@ -99,39 +103,39 @@
 
 	In contrast, Bhowmick and Saha concentrated on addressing class imbalance and noisy data, also in 2023 \cite{bhowmick}. They removed outliers using interquartile range filtering, applied ReliefF feature ranking, and balanced classes with SMOTE before training an inverse-distance-weighted k-nearest-neighbor (kNN) classifier. Their improved pipeline reached 78.9\% accuracy with an $F$-measure of 0.791, showing how preprocessing can boost kNN’s effectiveness on this imbalanced dataset.
 
-	\subsection{Goal}
+	\subsection{Goals and \textit{main machine learning aim}}
 
-	\todo{Explain, in the context of your problem of interest, what you hope to accom-
-		plish/learn from the data using these techniques?}
+%	\todo{Explain, in the context of your problem of interest, what you hope to accom-
+%		plish/learn from the data using these techniques?}
+%
+%	\todo{Explain which attribute you wish to predict in the regression based on which
+%		other attributes?}
+%
+%	\todo{Which class label will you predict based on which other attributes in the classi-
+%		fication task?}
 
-	\todo{Explain which attribute you wish to predict in the regression based on which
-		other attributes?}
+	The objective is to build models for both regression and classification. For the \textit{regression task}, the target variable will be the Refractive Index (\texttt{RI}), predicted using eight oxides that were measured for each observation. For the \textit{classification task}, the target variable is the glass type (\texttt{type}), which is divided into seven distinct classes. This label will be predicted based on the other attributes, namely the refractive index of the glass and its measured oxide composition
 
-	\todo{Which class label will you predict based on which other attributes in the classi-
-		fication task?}
-
-	\(\rightarrow\) (\textbf{V:}) The target variable is the type of glass (\texttt{type}), divided into 7 distinct classes. \todo{Complete this and tell that this will be the classification objective blabla.}
-
-	\todo{Describe \textbf{main machine learning aim}: One of these tasks is likely more relevant than the rest and will be denoted the main machine learning aim in the following.}
-
-	\(\rightarrow\) (\textbf{V:}) Mention that it's pretty obvious (and previously mentioned) that the main objective is \textbf{classification}.
-
-	\subsection{Data transformations}
-
-	\todo{Explain if you need to transform individual attribues in order to carry out these
-		tasks (e.g. centering, standardization, discretization, log transform, etc.) and
-		how you plan to do this.}
-
-	\(\rightarrow\) (\textbf{V:}) I would just mention overall standardisation is necessary, since it's all on different scales, a bit like in the PCA section (maybe move the text from there over here, and afterwards say something like ``As we already mentioned in Section ..., standardisation is necessary'' in the PCA section.). Also refer to the boxplots (unscaled and scaled).
+	Since the dataset is inherently structured around glass type classification, it is clear that the \textit{main machine learning aim} of this project is classification, while regression serves as a secondary task.
 
 	\section{A close look at the different attributes}
 
-	``Assignment: \textit{Describe if the attributes are discrete/continuous and whether they are nominal/or-
-		dinal/interval/ratio.}''
+%	``Assignment: \textit{Describe if the attributes are discrete/continuous and whether they are nominal/or-
+%		dinal/interval/ratio.}''
 
-	The data set consists of 214 samples of glass, each characterised by glass type, along with 9 numeric features. There are \textit{no missing values}. The attributes are all presented in Table \ref{table:attributes} and the \texttt{type} attribute is unfolded in Table \ref{table:types}.
+	\subsection{Feature Types}
 
-	The refractive index (\texttt{RI}), and concentrations of eight different oxides, including sodium (\texttt{Na}), magnesium (\texttt{Mg}), aluminum (\texttt{Al}), silicon (\texttt{Si}), potassium (\texttt{K}), calcium (\texttt{Ca}), barium (\texttt{Ba}), and iron (\texttt{Fe}) all are \textit{continuous} and \todo{ratio or interval}.
+	The glass type is, of course, a categorical, \textit{nominal} variable, since no glass type is considered `better' or `worse' than another.
+
+	The oxide components are measured in terms of weight percentage in the corresponding oxide, and are classified as \textit{continuous}, \textit{ratio} variables: a value of zero (e.g., 0.0\% Ba) signifies a true absence of that component, making multiplicative comparisons (ratios) meaningful. The refractive index (\texttt{RI}), though also continuous, is an \textit{interval} variable. This is because it is calculated as \(\texttt{RI} = \frac{c}{v}\) where \(c\) is the speed of light in vacuum and \(v\) is the speed of light in the medium. The existence of a true zero would imply infinite light speed so \texttt{RI} cannot be considered ratio-scaled.
+
+	It should be noted that the oxide components collectively form \textit{compositional data}, meaning their values are statistically interdependent because they represent parts of a whole (i.e., they sum to approximately 100\% for each glass sample). This inherent interdependence can influence statistical modeling.
+
+	\subsection{Need for scaling}
+
+	\label{section:scaling}
+
+	Despite the compositional nature, we should definitely scale the oxide features, primarily due to the significant disparity in their numerical ranges. This can be seen from the summary statistics in Table \ref{table:summary-stats}, as well as on the unscaled boxplots in Figure \ref{fig:unscaled-boxplots}. For example, \texttt{Si} (Silicon) often has values around 72\%, whereas \texttt{Fe} (Iron) and \texttt{Ba} (Barium) frequently register values close to 0.0\%. If these features were used in their raw form, distance-based machine learning algorithms (such as $k$-Nearest Neighbors or $k$-Means Clustering) would be unfairly dominated by features with the largest magnitudes, such as \texttt{Si} or \texttt{Ca}.
 
 	\begin{table}
 		\centering
@@ -150,7 +154,7 @@
 			\texttt{Fe}        & Iron oxide ($\chem{Fe_2 O_3}$)          & Continuous                \\ \hline
 			\texttt{type}      & Type of glass                           & Nominal                   \\
 		\end{tabular}
-		\caption{\todo{Fill in.}}
+		\caption{The 10 studied attributes, along with the observation ID, which was excluded from the analysis.}
 		\label{table:attributes}
 	\end{table}
 
@@ -167,68 +171,40 @@
 			6 & \texttt{tableware}               & Tableware (e.g. \dots)               \\ \hline
 			7 & \texttt{headlamps}               & Headlamps (e.g. \dots)
 		\end{tabular}
-		\caption{\todo{Fill in.}}
+		\caption{The different glass types in the dataset.}
 		\label{table:types}
 	\end{table}
 
-	\section{Descriptive analysis of the dataset}
+	\subsection{Distributions and potential outliers}
 
-%	Based on the summary statistics in Table \ref{table:summary-stats}, several attributes in the Glass dataset exhibit high variance or distributional irregularities that could introduce noise. \texttt{Mg} and \texttt{Ca} both have relatively large standard deviations (1.44 and 1.42), indicating wide dispersion compared to other features. \texttt{K} is the most problematic, with a low mean (0.50) but a similarly large standard deviation (0.65), combined with extreme skewness (6.55) and very high kurtosis (54.69), suggesting the presence of rare but extreme outliers. \texttt{Ba} also shows notable skewness (3.42) and kurtosis (12.54), reflecting occasional extreme values against mostly near-zero observations. Fe displays moderate skew (1.75) and kurtosis (2.66), though its absolute values remain small.
-%
-%	These patterns suggest that robust handling, through transformations, scaling, or outlier mitigation, may be most important for \texttt{K}, \texttt{Ba}, and \texttt{Fe}, while \texttt{Mg} and \texttt{Ca} may benefit from normalisation.
+	Figures \ref{fig:scaled-boxplots} and \ref{fig:histograms} reveal that \texttt{K}, \texttt{Ba}, and \texttt{Fe} are highly skewed with occasional extreme values. \texttt{Mg} displays a bimodal pattern, suggesting differences between glass types. \texttt{Ca} shows wide spread but is roughly symmetric, whereas \texttt{RI}, \texttt{Na}, \texttt{Al}, and \texttt{Si} appear closer to normal. Standardisation reduces scale differences and partially mitigates skewness, but highly skewed or multimodal variables may require additional preprocessing such as log-transformations or class-sensitive handling.
 
-	\subsection{Summary statistics}
-
-	\todo{The assignment is as follows:}
-
-	\textit{``Include relevant summary statistics of the attributes. Reflect on the values.
-		If your data set contains many similar attributes, you may restrict yourself to describing a
-		few representative features (apply common sense). You can place additional results in the
-		appendix if needed.''}
-
-	\todo{Reshuffle the text such that it follows the structure of this \LaTeX document.}
-
-%	Based on the summary statistics in Table \ref{table:summary-stats} and the histograms in Figure \ref{fig:histograms}, several attributes in the Glass dataset display variance patterns or irregular distributions. \texttt{K} is the most problematic, with extreme skewness and heavy tails; its histogram shows many zeros and a few very large outliers, consistent with its high kurtosis.
-%
-%	Ba and \texttt{Fe} follow a similar pattern, with distributions dominated by near-zero values and occasional spikes, making them highly skewed and potentially noisy. \texttt{Mg} exhibits a bimodal distribution, with one cluster near zero and another around 3–4, suggesting that variation may partly reflect differences between glass types, though still requiring careful treatment.
-%
-%	\texttt{Ca} has high spread but a more balanced shape. By contrast, \texttt{RI}, \texttt{Na}, \texttt{Al}, and \texttt{Si} appear roughly symmetric. Transformations (log or Box-Cox), standardization, or winsorization are recommended for skewed features, while Mg’s multimodality may warrant class-sensitive preprocessing.
-
-%	Attributes like \texttt{Na}, \texttt{Si}, and \texttt{Ba} have relatively symmetric boxes and whiskers in their boxplots in Figure \ref{fig:boxplots}, suggesting that they are closer to a normal distribution after standardization. In contrast, \texttt{RI}, \texttt{Mg}, \texttt{Al}, \texttt{K}, and \texttt{Ca} exhibit noticeable skewness and numerous outliers, indicating clear deviations from normality.
-
-	\todo{Put boxplots, histograms.}
-
-	\subsection{Extreme values and outliers}
-
-	\todo{Reshuffle the text such that it follows the structure of this \LaTeX document.}
-
-	\todo{Mention boxplots.}
+	The distribution of the glass type - as can be see in Table \ref{table:frequencies} - is imbalanced: 70 float-processed building windows, 76 processed building windows, 17 vehicle windows, 13 containers, 9 tableware, and 29 headlamps. Class 4 (\texttt{VW-NFP}) has no samples.
 
 	\begin{figure}
-		\centering
-		\includegraphics[width=.8\textwidth]{figures/boxplots}
-		\caption{Boxplots of the refractive index (\texttt{RI}) and the 8 oxides.}
-		\label{fig:boxplots}
+		\begin{subfigure}{.49\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{figures/boxplot_unstandardized}
+			\caption{Unscaled boxplots of the refractive index (\texttt{RI}) and the 8 oxides.}
+			\label{fig:unscaled-boxplots}
+		\end{subfigure}
+		\hspace*{0.02\textwidth}
+		\begin{subfigure}{.49\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{figures/boxplot_standardized}
+			\caption{Scaled boxplots of the refractive index (\texttt{RI}) and the 8 oxides.}
+			\label{fig:scaled-boxplots}
+		\end{subfigure}
 	\end{figure}
-
-	\subsection{Distribution of the attributes}
-
-	\todo{Reshuffle the text such that it follows the structure of this \LaTeX document.}
-
-	The distribution of the glass type - as can be see in Table \ref{table:frequencies} - is imbalanced: 70 float-processed building windows, 76 processed building windows, 17 vehicle windows, 13 containers, 9 tableware, and 29 headlamps. Class 4 (\texttt{VW-NFP}) has no samples
-
-	\label{section:distribution}
 
 	\begin{figure}
 		\centering
 		\includegraphics[width=.8\textwidth]{figures/histograms}
-		\caption{Relative frequency histograms for the nine numerical attributes. \todo{Describe the general distributions.}}
+		\caption{Relative frequency histograms for the nine numerical attributes}
 		\label{fig:histograms}
 	\end{figure}
 
-	\todo{Mention the histograms and maybe the boxplots, too.} (Figure \verb*|\ref{fig:histograms}|)
-
-	\begin{table}[h!]
+	\begin{table}
 		\centering
 		\begin{subtable}{0.65\textwidth}
 			\begin{tabular}{r | *{6}{| r}}
@@ -269,7 +245,7 @@
 
 	\todo{Fill out this section.}
 
-	\begin{figure}[h!]
+	\begin{figure}
 		\centering
 		\begin{subfigure}{.49\textwidth}
 			\centering
@@ -292,17 +268,17 @@
 
 	\subsection{Need for standardisation}
 
-	Since the attributes are expressed on different numerical scales (see Section \ref{section:distribution}), the variables are standardised by subtracting the mean and dividing by the standard deviation. This ensures that no single attribute dominates the analysis merely due to its scale.
+	Since the attributes are expressed on different numerical scales (see Section \ref{section:scaling}), the variables are standardised by subtracting the mean and dividing by the standard deviation. This ensures that no single attribute dominates the analysis merely due to its scale.
 
 	\subsection{Dimension reduction}
 
-	\begin{figure}[h!]
+	\begin{figure}
 		\includegraphics[width=.9\textwidth]{figures/pca_explained_variance}
 		\caption{Explained (cumulative) variances for the 9 principal components $\bm{v}_0,\ldots,\bm{v}_8$}.
 		\label{fig:explained-var}
 	\end{figure}
 
-	The goal is to reduce the original 9-dimensional dataset to an $M$-dimensional representation with $M < 9$, using the first $M$ principal components $\bm{v}_0,\ldots,\bm{v}_{M-1}$. As shown in Figure \ref{fig:explained-var}, selecting $M=5$ principal components explains \SI{89.31}{\percent} of the total variance. By increasing the dimensionality to $M=7$, as much as \SI{99.27}{\percent} of the variance can be retained, essentially preserving almost all of the original information.
+	The goal is to reduce the original 9-dimensional dataset to an $M$-dimensional representation with $M < 9$, using the first $M$ principal components $\bm{v}_1,\ldots,\bm{v}_{M}$. As shown in Figure \ref{fig:explained-var}, selecting $M=5$ principal components explains \SI{89.31}{\percent} of the total variance. By increasing the dimensionality to $M=7$, as much as \SI{99.27}{\percent} of the variance can be retained, essentially preserving almost all of the original information.
 
 	Choosing $M=5$ provides a balance between dimensionality reduction and information retention. While $M=7$ captures nearly all of the variance, the marginal gain in explained variance beyond the first five components is relatively small compared to the added complexity. Retaining five dimensions reduces computational cost, simplifies subsequent analysis, and removes noise while still preserving the majority of the data's variability.
 
@@ -310,10 +286,10 @@
 
 	The \textit{principal directions} of the first $M$ principal components are defined by the eigenvectors $\bm{v}_i$ that span the subspace of reduced dimensionality. These vectors form the transformation matrix $\bm{V}_M$, which is applied to the standardised data $\bm{X}$ to obtain the projected representation $\bm{B} = \bm{V}_M \bm{X}$. The new coordinates $\bm{B}$ capture the structure of the data in fewer dimensions while emphasising the directions of greatest variance.
 
-	\begin{table}[h!]
+	\begin{table}
 		\centering
 		\begin{tabular}{r | *{5}{|r}}
-			\textbf{Variable} & $\textbf{PC}_0$ & $\textbf{PC}_1$ & $\textbf{PC}_2$ & $\textbf{PC}_3$ & $\textbf{PC}_4$ \\ \hline\hline
+			\textbf{Variable} & $\textbf{PC}_1$ & $\textbf{PC}_2$ & $\textbf{PC}_3$ & $\textbf{PC}_4$ & $\textbf{PC}_5$ \\ \hline\hline
 			\texttt{RI} & \num{0.545}     &          -0.286 &           0.087 &          -0.147 &          -0.074 \\
 			\texttt{Na} & -0.258          &          -0.270 &          -0.385 &          -0.491 &           0.154 \\
 			\texttt{Mg} & 0.111           &           0.594 &           0.008 &          -0.379 &           0.124 \\
@@ -335,26 +311,24 @@
 		\label{fig:pc-components}
 	\end{figure}
 
-	Based on the loadings in Table \ref{table:loadings} and the corresponding visualisation in Figure \ref{fig:pc-components}, the first principal component ($\text{PC}_0$) is most strongly influenced by \texttt{RI} and \texttt{Ca}, which carry positive loadings, and negatively by \texttt{Al} and \texttt{Si}. This suggests that $\text{PC}_0$ captures a trade-off between refractive index and calcium content versus aluminium and silicon.
+	Based on the loadings in Table \ref{table:loadings} and the corresponding visualisation in Figure \ref{fig:pc-components}, the first principal component ($\text{PC}_1$) is most strongly influenced by \texttt{RI} and \texttt{Ca}, which carry positive loadings, and negatively by \texttt{Al} and \texttt{Si}. This suggests that $\text{PC}_1$ captures a trade-off between refractive index and calcium content versus aluminium and silicon.
 
 	%	Shortened version of the stuff that is beneath this comment:
 	%	The second principal component ($\text{PC}_1$) places strong weight on \texttt{Mg} and negative weight on \texttt{Ba}, indicating a contrast between magnesium and barium content. Later components highlight more specific variations, such as $\text{PC}_4$, which is dominated by \texttt{Fe}, pointing to a component that largely isolates variation in iron concentration.
 
-	\todo{Review all the stuff that is below and check for errors.}
+	The second principal component ($\text{PC}_2$) assigns a large positive loading to \texttt{Mg}, while strongly down-weighting \texttt{Ba} and, to a lesser degree, \texttt{Na}. This indicates that $\text{PC}_2$ primarily reflects a contrast between magnesium concentration and the presence of barium and sodium.
 
-	The second principal component ($\text{PC}_1$) assigns a large positive loading to \texttt{Mg}, while strongly down-weighting \texttt{Ba} and, to a lesser degree, \texttt{Na}. This indicates that $\text{PC}_1$ primarily reflects a contrast between magnesium concentration and the presence of barium and sodium.
+	The third principal component ($\text{PC}_3$) is dominated by a large positive loading for \texttt{K}, balanced by strong negative contributions from \texttt{Si} and \texttt{Na}. This points to a dimension that separates potassium-rich compositions from those with higher silica and sodium content.
 
-	The third principal component ($\text{PC}_2$) is dominated by a large positive loading for \texttt{K}, balanced by strong negative contributions from \texttt{Si} and \texttt{Na}. This points to a dimension that separates potassium-rich compositions from those with higher silica and sodium content.
+	The fourth principal component ($\text{PC}_4$) shows high positive contributions from \texttt{Si}, \texttt{Ca}, and \texttt{Fe}, with negative influence from \texttt{Mg} and \texttt{Na}. It therefore captures variation where higher levels of silicon, calcium, and iron occur together in opposition to magnesium and sodium.
 
-	The fourth principal component ($\text{PC}_3$) shows high positive contributions from \texttt{Si}, \texttt{Ca}, and \texttt{Fe}, with negative influence from \texttt{Mg} and \texttt{Na}. It therefore captures variation where higher levels of silicon, calcium, and iron occur together in opposition to magnesium and sodium.
-
-	Finally, the fifth principal component ($\text{PC}_4$) is characterised by a dominant positive loading for \texttt{Fe}, while moderately influenced by \texttt{Ba} and negatively by \texttt{K}. This indicates that $\text{PC}_4$ primarily isolates variation in iron concentration, with some contribution from the balance between barium and potassium.
+	Finally, the fifth principal component ($\text{PC}_5$) is characterised by a dominant positive loading for \texttt{Fe}, while moderately influenced by \texttt{Ba} and negatively by \texttt{K}. This indicates that $\text{PC}_5$ primarily isolates variation in iron concentration, with some contribution from the balance between barium and potassium.
 
 	\subsection{Projected data}
 
 	\subsubsection{Biplots}
 
-	The projection of the standardised dataset onto the principal component axes produces a lower-dimensional representation that can be visualised in two-dimensional \textit{biplots}. In these plots:
+	The projection of the standardized dataset onto the principal component axes produces a lower-dimensional representation that can be visualized in two-dimensional \textit{biplots}. In these plots:
 
 	\begin{itemize}
 		\item Each point corresponds to a \textit{score}, representing the coordinates of an original observation in the space spanned by the selected principal components. The scores have been \textit{rescaled} to the interval $[-1,1]$ to facilitate comparison with the arrows, representing variable loadings.
@@ -363,15 +337,13 @@
 
 	Together, scores and loadings allow for simultaneous interpretation of both the observations and the variables.
 
-	\subsubsection{Interpretation based on glass types}
+	\subsubsection{Interpretation}
 
-	Figure~\ref{fig:biplots} shows two biplot visualisations. In the first biplot (PC1 vs.\ PC2), which captures \SI{50}{\percent} of the variance, the dominant trends in the data are visible, and some separation between glass types can be observed \todo{explain}. For the second biplot, \todo{fill out.}
+	Figure~\ref{fig:biplots} shows two biplot visualizations. In the first biplot (PC1 vs.\ PC2), which captures \SI{50}{\percent} of the variance, the dominant trends in the data are visible, and some separation between glass types can be observed. We can, for example, see a clear separation of headlamps, who on average score low on PC1 and have about a zero-loading for PC2. The building and vehicle windows, on the other hand, show significant overlap and can thus not be distinguished from each other by just looking at the first two principal components.
 
-	\todo{Check the paragraph below and fill out further.}
+	The loadings indicate that the separation of classes along the axes is largely driven by specific chemical compositions; for example, PC1 contrasts samples with high \texttt{RI} and \texttt{Ca} against those with higher \texttt{Al} and \texttt{Si}, explaining why some classes separate along this component.
 
-	The projected scores reveal that some classes, such as \texttt{BW-FP} and \texttt{R}, cluster distinctly in the reduced space, whereas others, such as \texttt{LW-FP} and \texttt{GL}, exhibit more overlap. The loadings indicate that the separation of classes along the axes is largely driven by specific chemical compositions; for example, PC1 contrasts samples with high \texttt{RI} and \texttt{Ca} against those with higher \texttt{Al} and \texttt{Si}, explaining why some classes separate along this component. \todo{Explain the concrete projections of the different classes further.}
-
-	\begin{figure}[h!]
+	\begin{figure}
 		\centering
 		\begin{subfigure}{0.49\textwidth}
 			\includegraphics[width=\linewidth]{figures/pca_biplot_pc1_pc2.pdf}
@@ -388,20 +360,17 @@
 		\label{fig:biplots}
 	\end{figure}
 
-	\subsubsection{Extreme scores}
-
-	\todo{Explain the observations that score extremely high/low in certain principal directions.}
-
-	\section{Use of GenAI}
-
-	Keep in the back of your mind for what you used GenAI and add it at the end.
-
-	\section*{Summary}
+	\section{Discussion}
 
 	\todo{Assignment: ``A discussion explaining what you have learned about the data.
 		Summarize the most important things you have learned about the data and give your
 		thoughts on whether your primary machine learning aim appears to be feasible based on
 		your visualization.''}
+
+
+	\section*{Use of GenAI}
+
+	Keep in the back of your mind for what you used GenAI and add it at the end.
 
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
