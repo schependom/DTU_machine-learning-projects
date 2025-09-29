@@ -243,7 +243,35 @@
 
 	\subsection{Correlation between attributes}
 
-	\todo{Fill out this section.}
+	The correlation structure of the nine numerical attributes is summarised by the correlation-matrix
+	heatmap (Figure~\ref{fig:correlation}).  Several clear patterns are visible and relevant for modelling:
+	
+	\begin{itemize}
+	  \item \textbf{Strong positive correlation between refractive index and calcium:} RI and Ca have a large
+	    positive linear association (Pearson $r \approx +0.81$). This indicates that samples with higher
+	    calcium content tend to have larger refractive indices in this dataset.
+	  \item \textbf{Notable negative correlation between RI and Si:} RI and Si are negatively correlated
+	    ($r \approx -0.54$), so silica-rich samples tend to have somewhat lower RI values.
+	  \item \textbf{Moderate correlations involving Mg, Al and Ba:} Mg is negatively correlated with both Ba
+	    and Al (e.g. Mg--Ba $r\approx -0.49$, Mg--Al $r\approx -0.48$), while Al and Ba show a moderate
+	    positive correlation (Al--Ba $r\approx +0.48$). Na and K show only weak-to-moderate associations
+	    with other oxides (e.g. Na--Ba $r\approx +0.33$, Al--K $r\approx +0.33$).
+	  \item \textbf{Generally weak correlations for Fe:} iron (Fe) has only small correlations with the other
+	    variables (all $|r| \ll 0.5$).
+	\end{itemize}
+	
+	These patterns have two important consequences for downstream analysis. First, several pairs/groups of
+	variables show moderate-to-strong linear dependence (e.g. RI/Ca, Mg/Ba, Al/Mg). Such collinearity can
+	inflate variance of coefficient estimates in linear methods and makes interpretation of individual
+	coefficients difficult. Second, the oxides are compositional (parts of an overall composition), which
+	can induce spurious correlations; standard multivariate techniques (PCA, regularised regression, or
+	compositional transforms such as log-ratios) should be considered if the analysis requires interpretable
+	linear relationships.
+	
+	For visualization and dimensionality reduction we used PCA (Section~3).  The correlation structure above
+	is consistent with the PCA loadings: PC1 places large positive weight on RI and Ca, and negative weight
+	on Al and Si; PC2 emphasises Mg and Ba.  See Figure~\ref{fig:correlation} for the full matrix and the
+	scatter example (RI vs Ca) that illustrates the strongest linear relationship identified above.
 
 	\begin{figure}
 		\centering
@@ -361,23 +389,79 @@
 	\end{figure}
 
 	\section{Discussion}
-
-	\todo{Assignment: ``A discussion explaining what you have learned about the data.
-		Summarize the most important things you have learned about the data and give your
-		thoughts on whether your primary machine learning aim appears to be feasible based on
-		your visualization.''}
+	\paragraph{Summary of main findings.}
+	From the descriptive analysis and visualisations we draw the following principal conclusions. The dataset
+	contains $N=214$ samples described by nine numerical attributes (RI + eight oxides). There are no
+	missing values. Many variables are skewed (notably K and Ba) and some have occasional extremes
+	(especially Ba and Ca); Mg shows a bimodal-like pattern across the dataset. The class distribution is
+	imbalanced: building-window classes dominate (70 and 76 samples), headlamps are moderately represented
+	(29), while container/tableware classes are small (13 and 9 samples) and one of the UCI classes is
+	absent in our download. The correlation analysis (Section~\ref{sec:correlation}) reveals substantial
+	linear dependence (e.g. RI--Ca $r\approx +0.81$, RI--Si $r\approx -0.54$, Mg--Ba $r\approx -0.49$),
+	which motivated the PCA and dimensionality-reduction work in Section~3.
+	
+	\paragraph{Feasibility of the classification aim.}
+	Our baseline supervised experiments (Random Forest and logistic regression on standardised oxide-only
+	features) show that the multi-class classification task is feasible but non-trivial. The Random Forest
+	achieved a test accuracy of approximately \texttt{0.674} on the held-out set and a 5-fold cross-validated
+	mean accuracy of around \texttt{0.748} (std $\approx 0.029$). The confusion patterns and PCA biplots
+	indicate that some classes (notably the two building-window classes) substantially overlap in the
+	leading principal-component space and are therefore inherently harder to separate; by contrast, the
+	headlamps class appears relatively well separated along PC1/PC2. Small sample sizes for containers and
+	tableware make reliable classification for those classes challenging without further data or targeted
+	rebalancing.
+	
+	\paragraph{Actionable next steps.}
+	Based on the visual and numerical diagnostics we recommend the following prioritized steps before
+	extensive model tuning:
+	
+	\begin{enumerate}
+	  \item \textbf{Address skewness and extremes:} apply robust transformations (e.g. log or Box--Cox for
+	    strictly positive oxides, or Winsorization), and consider robust estimators or tree-based models
+	    that handle outliers naturally.
+	  \item \textbf{Handle class imbalance:} for minority classes consider stratified resampling, SMOTE-type
+	    augmentation, or one-vs-rest classifiers with calibrated thresholds to improve per-class recall.
+	  \item \textbf{Reduce redundancy:} use PCA (or regularised models) to control multicollinearity in linear
+	    approaches; alternatively, select a compact subset of chemically interpretable predictors.
+	  \item \textbf{Compositional caution:} because oxide measurements are parts of a composition, consider
+	    compositional data methods (Aitchison log-ratio transforms) when interpretability of coefficients is
+	    required.
+	\end{enumerate}
+	
+	Taken together, these steps should increase both predictive performance and interpretability. The
+	baseline results and the PCA visualisations indicate that the classification objective is realistic, but
+	substantial care is needed for small classes and for correct preprocessing of compositional and skewed
+	measurements.
+	
+	\vspace{1ex}
+	\noindent\textbf{Limitations.} The main limitations at this stage are (i) class imbalance and small sample
+	counts for some classes, (ii) compositional structure that can bias naive correlation-based interpretations,
+	and (iii) sensitivity to outliers for some attributes (Ba, Ca, K). These caveats should guide model
+	selection and evaluation in the next project phase.
+	
 
 
 	\section*{Use of GenAI}
-
-	Keep in the back of your mind for what you used GenAI and add it at the end.
-
+	For the sake of transparency, the project used generative-AI tools in a limited and documented manner:
+	GenAI assisted primarily with \emph{work-organisation suggestions}, the creation and phrasing of
+	subsection titles, and language polishing of draft paragraphs from word to latex format. All quantitative analyses, figures, and
+	numerical results reported in this document were produced by the code in the repository and the
+	authors' own computations and were \emph{not} fabricated or altered by GenAI. Where GenAI suggestions
+	were used, the group reviewed and validated them against the code outputs and figures before inclusion.
+	
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
 
 %	\newpage
 %
-%	\appendix
+	\appendix
+	\section{Repository and supplementary materials}
+	The full notebook, scripts, and generated figures for this project are available in the project repository:
+	\begin{quote}
+	\url{https://github.com/schependom/DTU_machine-learning-projects/tree/main}
+	\end{quote}
+	This repository contains the data-loading and analysis code that produced the tables and figures cited
+	above (see the \texttt{figures/} folder for the PNG/PDF outputs referenced in the report).
 %
 %	\LARGE\bfseries Appendix
 
