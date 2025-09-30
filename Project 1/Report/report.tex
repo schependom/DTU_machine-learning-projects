@@ -6,6 +6,14 @@
 \usepackage{amsmath}
 \usepackage{bm} % bold ITALIC math (for vectors!)
 \usepackage{siunitx}
+\sisetup{
+	per-mode=fraction,
+	detect-weight = true,
+	detect-family = true,
+	separate-uncertainty=true, % Dit is voor de plus-minus
+	output-decimal-marker={.}
+}
+
 \usepackage{subcaption}
 
 \title{Machine Learning Project 1}
@@ -52,6 +60,7 @@
 		%	\end{table}
 
 	\begin{table}[h!]
+		\renewcommand{\arraystretch}{1.2}
 		\begin{subtable}{.58\textwidth}
 			\begin{tabular}{l | l}
 				\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
@@ -63,13 +72,12 @@
 			\label{table:members}
 		\end{subtable}
 		\begin{subtable}{.4\textwidth}
-			\begin{tabular}{l | *{3}{|l}}
+			\begin{tabular}{l | *{3}{|r}}
 				\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
-				Section 1     & 30\%             & 30\%           & 40\%            \\ \hline
-				Section 2     & 40\%             & 30\%           & 30\%            \\ \hline
-				Section 3     & 30\%             & 40\%           & 30\%            \\ \hline
-				Section 4     & 80\%             & 10\%           & 10\%			\\ \hline
-				\LaTeX        & 90\%             & 5\%           & 5\%
+				Section 1     & 40\%             & 0\%            & 60\%            \\ \hline
+				Section 2     & 30\%             & 50\%           & 20\%            \\ \hline
+				Section 3     & 100\%             & 0\%           & 0\%            \\ \hline
+				\LaTeX        & 95\%             & 5\%            & 0\%
 			\end{tabular}
 			\caption{Contributions \& responsabilities table.}
 			\label{table:contributions}
@@ -243,9 +251,11 @@
 
 	\subsection{Correlation between attributes}
 
+	\label{section:correlation}
+
 	The correlation structure of the nine numerical attributes is summarised by the correlation-matrix
-	heatmap (Figure~\ref{fig:correlation}).  Several clear patterns are visible and relevant for modelling:
-	
+	heatmap (Figure~\ref{fig:correlation}).  Several clear patterns are visible in the \textit{linear} correlations:
+
 	\begin{itemize}
 	  \item \textbf{Strong positive correlation between refractive index and calcium:} RI and Ca have a large
 	    positive linear association (Pearson $r \approx +0.81$). This indicates that samples with higher
@@ -259,16 +269,16 @@
 	  \item \textbf{Generally weak correlations for Fe:} iron (Fe) has only small correlations with the other
 	    variables (all $|r| \ll 0.5$).
 	\end{itemize}
-	
+
 	These patterns have two important consequences for downstream analysis. First, several pairs/groups of
-	variables show moderate-to-strong linear dependence (e.g. RI/Ca, Mg/Ba, Al/Mg). Such collinearity can
+	variables show moderate-to-strong linear dependence (e.g. RI/Ca, Mg/Ba, Al/Mg). Such \textit{collinearity} can
 	inflate variance of coefficient estimates in linear methods and makes interpretation of individual
-	coefficients difficult. Second, the oxides are compositional (parts of an overall composition), which
+	coefficients difficult. Second, the oxides are \textit{compositional} (the percentages sum to one), which
 	can induce spurious correlations; standard multivariate techniques (PCA, regularised regression, or
 	compositional transforms such as log-ratios) should be considered if the analysis requires interpretable
 	linear relationships.
-	
-	For visualization and dimensionality reduction we used PCA (Section~3).  The correlation structure above
+
+	For visualization and dimensionality reduction we used PCA (Section~\ref{section:pca}). The correlation structure above
 	is consistent with the PCA loadings: PC1 places large positive weight on RI and Ca, and negative weight
 	on Al and Si; PC2 emphasises Mg and Ba.  See Figure~\ref{fig:correlation} for the full matrix and the
 	scatter example (RI vs Ca) that illustrates the strongest linear relationship identified above.
@@ -290,9 +300,9 @@
 		\caption{Whole correlation matrix and individual correlation between \texttt{RI} and \texttt{Ca}.}
 	\end{figure}
 
-	\todo{Reference the matrix correlation plot.}  (Figure \verb*|\ref{fig:correlation}|)
-
 	\section{Principal Component Analysis}
+
+	\label{section:pca}
 
 	\subsection{Need for standardisation}
 
@@ -308,11 +318,11 @@
 
 	The goal is to reduce the original 9-dimensional dataset to an $M$-dimensional representation with $M < 9$, using the first $M$ principal components $\bm{v}_1,\ldots,\bm{v}_{M}$. As shown in Figure \ref{fig:explained-var}, selecting $M=5$ principal components explains \SI{89.31}{\percent} of the total variance. By increasing the dimensionality to $M=7$, as much as \SI{99.27}{\percent} of the variance can be retained, essentially preserving almost all of the original information.
 
-	Choosing $M=5$ provides a balance between dimensionality reduction and information retention. While $M=7$ captures nearly all of the variance, the marginal gain in explained variance beyond the first five components is relatively small compared to the added complexity. Retaining five dimensions reduces computational cost, simplifies subsequent analysis, and removes noise while still preserving the majority of the data's variability.
+	While $M=7$ captures nearly all of the variance, the marginal gain in explained variance beyond the first five components is relatively small compared to the added complexity. Retaining five dimensions reduces computational cost, simplifies subsequent analysis, and removes noise while still preserving the majority of the data's variability. We conclude that choosing $M=5$ provides a balance between dimensionality reduction and information retention.
 
 	\subsection{Principal directions}
 
-	The \textit{principal directions} of the first $M$ principal components are defined by the eigenvectors $\bm{v}_i$ that span the subspace of reduced dimensionality. These vectors form the transformation matrix $\bm{V}_M$, which is applied to the standardised data $\bm{X}$ to obtain the projected representation $\bm{B} = \bm{V}_M \bm{X}$. The new coordinates $\bm{B}$ capture the structure of the data in fewer dimensions while emphasising the directions of greatest variance.
+	The \textit{principal directions} of the first $M$ principal components are defined by the eigenvectors $\bm{v}_i$ that span the subspace of reduced dimensionality. These vectors form the transformation matrix $\bm{V}_M$, which is applied to the standardised data $\tilde{\bm{X}}$ to obtain the projected representation $\bm{B} = \bm{V}_M \tilde{\bm{X}}$. The new coordinates $\bm{B}$ capture the structure of the data in fewer dimensions while emphasising the directions of greatest variance. Based on the loadings in Table \ref{table:loadings} and the corresponding visualisation in Figure \ref{fig:pc-components}, we interpret the first 5 principal components:
 
 	\begin{table}
 		\centering
@@ -339,18 +349,17 @@
 		\label{fig:pc-components}
 	\end{figure}
 
-	Based on the loadings in Table \ref{table:loadings} and the corresponding visualisation in Figure \ref{fig:pc-components}, the first principal component ($\text{PC}_1$) is most strongly influenced by \texttt{RI} and \texttt{Ca}, which carry positive loadings, and negatively by \texttt{Al} and \texttt{Si}. This suggests that $\text{PC}_1$ captures a trade-off between refractive index and calcium content versus aluminium and silicon.
+	\begin{itemize}
+		\item The first principal component ($\text{PC}_1$) is most strongly influenced by \texttt{RI} and \texttt{Ca}, which carry positive loadings, and negatively by \texttt{Al} and \texttt{Si}. This suggests that $\text{PC}_1$ captures a trade-off between refractive index and calcium content versus aluminium and silicon.
 
-	%	Shortened version of the stuff that is beneath this comment:
-	%	The second principal component ($\text{PC}_1$) places strong weight on \texttt{Mg} and negative weight on \texttt{Ba}, indicating a contrast between magnesium and barium content. Later components highlight more specific variations, such as $\text{PC}_4$, which is dominated by \texttt{Fe}, pointing to a component that largely isolates variation in iron concentration.
+		\item The second principal component ($\text{PC}_2$) assigns a large positive loading to \texttt{Mg}, while strongly down-weighting \texttt{Ba} and, to a lesser degree, \texttt{Na}. This indicates that $\text{PC}_2$ primarily reflects a contrast between magnesium concentration and the presence of barium and sodium.
 
-	The second principal component ($\text{PC}_2$) assigns a large positive loading to \texttt{Mg}, while strongly down-weighting \texttt{Ba} and, to a lesser degree, \texttt{Na}. This indicates that $\text{PC}_2$ primarily reflects a contrast between magnesium concentration and the presence of barium and sodium.
+		\item The third principal component ($\text{PC}_3$) is dominated by a large positive loading for \texttt{K}, balanced by strong negative contributions from \texttt{Si} and \texttt{Na}. This points to a dimension that separates potassium-rich compositions from those with higher silica and sodium content.
 
-	The third principal component ($\text{PC}_3$) is dominated by a large positive loading for \texttt{K}, balanced by strong negative contributions from \texttt{Si} and \texttt{Na}. This points to a dimension that separates potassium-rich compositions from those with higher silica and sodium content.
+		\item The fourth principal component ($\text{PC}_4$) shows high positive contributions from \texttt{Si}, \texttt{Ca}, and \texttt{Fe}, with negative influence from \texttt{Mg} and \texttt{Na}. It therefore captures variation where higher levels of silicon, calcium, and iron occur together in opposition to magnesium and sodium.
 
-	The fourth principal component ($\text{PC}_4$) shows high positive contributions from \texttt{Si}, \texttt{Ca}, and \texttt{Fe}, with negative influence from \texttt{Mg} and \texttt{Na}. It therefore captures variation where higher levels of silicon, calcium, and iron occur together in opposition to magnesium and sodium.
-
-	Finally, the fifth principal component ($\text{PC}_5$) is characterised by a dominant positive loading for \texttt{Fe}, while moderately influenced by \texttt{Ba} and negatively by \texttt{K}. This indicates that $\text{PC}_5$ primarily isolates variation in iron concentration, with some contribution from the balance between barium and potassium.
+		\item Finally, the fifth principal component ($\text{PC}_5$) is characterised by a dominant positive loading for \texttt{Fe}, while moderately influenced by \texttt{Ba} and negatively by \texttt{K}. This indicates that $\text{PC}_5$ primarily isolates variation in iron concentration, with some contribution from the balance between barium and potassium.
+	\end{itemize}
 
 	\subsection{Projected data}
 
@@ -391,79 +400,78 @@
 	\section{Discussion}
 	\paragraph{Summary of main findings.}
 	From the descriptive analysis and visualisations we draw the following principal conclusions. The dataset
-	contains $N=214$ samples described by nine numerical attributes (RI + eight oxides). There are no
-	missing values. Many variables are skewed (notably K and Ba) and some have occasional extremes
-	(especially Ba and Ca); Mg shows a bimodal-like pattern across the dataset. The class distribution is
+	contains $N=214$ samples described by nine numerical attributes (\texttt{RI} + eight oxides). There are no
+	missing values. Many variables are skewed (notably \texttt{K} and \texttt{Ba}) and some have occasional extremes
+	(especially \texttt{Ba} and \texttt{Ca}); \texttt{Mg} shows a bimodal-like pattern across the dataset. The class distribution is
 	imbalanced: building-window classes dominate (70 and 76 samples), headlamps are moderately represented
 	(29), while container/tableware classes are small (13 and 9 samples) and one of the UCI classes is
-	absent in our download. The correlation analysis (Section~\ref{sec:correlation}) reveals substantial
-	linear dependence (e.g. RI--Ca $r\approx +0.81$, RI--Si $r\approx -0.54$, Mg--Ba $r\approx -0.49$),
-	which motivated the PCA and dimensionality-reduction work in Section~3.
-	
+	absent in our download. The correlation analysis (Section~\ref{section:correlation}) reveals substantial
+	linear dependence (e.g. \texttt{RI}--\texttt{Ca} $r\approx +0.81$, \texttt{RI}--\texttt{Si} $r\approx -0.54$, \texttt{Mg}--\texttt{Ba} $r\approx -0.49$),
+	which motivated the PCA and dimensionality-reduction work in Section~\ref{section:scaling}.
+
 	\paragraph{Feasibility of the classification aim.}
 	Our baseline supervised experiments (Random Forest and logistic regression on standardised oxide-only
 	features) show that the multi-class classification task is feasible but non-trivial. The Random Forest
-	achieved a test accuracy of approximately \texttt{0.674} on the held-out set and a 5-fold cross-validated
-	mean accuracy of around \texttt{0.748} (std $\approx 0.029$). The confusion patterns and PCA biplots
+	achieved a test accuracy of approximately 0.674 on the held-out set and a 5-fold cross-validated
+	mean accuracy of around \SI{0.748(0.029)}{}. The PCA biplots
 	indicate that some classes (notably the two building-window classes) substantially overlap in the
 	leading principal-component space and are therefore inherently harder to separate; by contrast, the
 	headlamps class appears relatively well separated along PC1/PC2. Small sample sizes for containers and
 	tableware make reliable classification for those classes challenging without further data or targeted
 	rebalancing.
-	
-	\paragraph{Actionable next steps.}
-	Based on the visual and numerical diagnostics we recommend the following prioritized steps before
-	extensive model tuning:
-	
+
+	\paragraph{Actionable next steps and points of attention.}
+	Based on the visual and numerical diagnostics we consider the following steps:
+
 	\begin{enumerate}
 	  \item \textbf{Address skewness and extremes:} apply robust transformations (e.g. log or Box--Cox for
-	    strictly positive oxides, or Winsorization), and consider robust estimators or tree-based models
+	    strictly positive oxides), and consider robust estimators or tree-based models
 	    that handle outliers naturally.
-	  \item \textbf{Handle class imbalance:} for minority classes consider stratified resampling, SMOTE-type
-	    augmentation, or one-vs-rest classifiers with calibrated thresholds to improve per-class recall.
 	  \item \textbf{Reduce redundancy:} use PCA (or regularised models) to control multicollinearity in linear
 	    approaches; alternatively, select a compact subset of chemically interpretable predictors.
-	  \item \textbf{Compositional caution:} because oxide measurements are parts of a composition, consider
-	    compositional data methods (Aitchison log-ratio transforms) when interpretability of coefficients is
-	    required.
+	  \item \textbf{Compositional caution:} because oxide measurements are parts of a composition,
+	  compositional data methods (e.g. log-ratio transforms) could be considered.
+	  \item \textbf{Class imbalance:} the class imbalance should be handled with care.
 	\end{enumerate}
-	
+
 	Taken together, these steps should increase both predictive performance and interpretability. The
 	baseline results and the PCA visualisations indicate that the classification objective is realistic, but
 	substantial care is needed for small classes and for correct preprocessing of compositional and skewed
 	measurements.
-	
-	\vspace{1ex}
-	\noindent\textbf{Limitations.} The main limitations at this stage are (i) class imbalance and small sample
+
+	\paragraph{Limitations.} The main limitations at this stage are (i) class imbalance and small sample
 	counts for some classes, (ii) compositional structure that can bias naive correlation-based interpretations,
 	and (iii) sensitivity to outliers for some attributes (Ba, Ca, K). These caveats should guide model
 	selection and evaluation in the next project phase.
-	
+
 
 
 	\section*{Use of GenAI}
 	For the sake of transparency, the project used generative-AI tools in a limited and documented manner:
-	GenAI assisted primarily with \emph{work-organisation suggestions}, the creation and phrasing of
-	subsection titles, and language polishing of draft paragraphs from word to latex format. All quantitative analyses, figures, and
+	GenAI assisted primarily with \emph{work-organisation suggestions} and language polishing when going from draft to final report. All quantitative analyses, figures, and
 	numerical results reported in this document were produced by the code in the repository and the
-	authors' own computations and were \emph{not} fabricated or altered by GenAI. Where GenAI suggestions
+	authors' own computations were \emph{not} fabricated by GenAI. It should be noted that some team members make use of the VSCode Copilot code completion to speed up their programming work. Where GenAI suggestions
 	were used, the group reviewed and validated them against the code outputs and figures before inclusion.
-	
+
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
 
-%	\newpage
-%
+	\vspace*{1cm}
 	\appendix
+
+	\LARGE\bfseries Appendix
+
+	\normalsize\normalfont
+
 	\section{Repository and supplementary materials}
 	The full notebook, scripts, and generated figures for this project are available in the project repository:
 	\begin{quote}
 	\url{https://github.com/schependom/DTU_machine-learning-projects/tree/main}
 	\end{quote}
 	This repository contains the data-loading and analysis code that produced the tables and figures cited
-	above (see the \texttt{figures/} folder for the PNG/PDF outputs referenced in the report).
+	above (see the \texttt{figures/} folder for the PDF outputs referenced in the report).
 %
-%	\LARGE\bfseries Appendix
+%
 
 %	\section{Test}
 
