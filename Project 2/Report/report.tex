@@ -1,0 +1,193 @@
+\documentclass[dtu]{dtuarticle}
+\usepackage{parskip} % use enters instead of indents
+
+\newcommand{\todo}[1]{\color{red}[TODO: #1]\color{black}}
+\newcommand*\chem[1]{\ensuremath{\mathrm{#1}}}
+\usepackage{amsmath}
+\usepackage{bm} % bold ITALIC math (for vectors!)
+\usepackage{siunitx}
+\sisetup{
+	per-mode=fraction,
+	detect-weight = true,
+	detect-family = true,
+	separate-uncertainty=true, % Dit is voor de plus-minus
+	output-decimal-marker={.}
+}
+
+\usepackage{subcaption}
+
+\title{Machine Learning Project 2}
+\subtitle{Supervised Learning: Classification and Regression}
+\author{Group 94}
+\course{02452 Machine Learning}
+\address{
+	DTU Compute \\
+	Fall 2025
+}
+\date{\today}
+
+
+\begin{document}
+
+	\maketitle
+
+	\begin{table}[h!]
+		\renewcommand{\arraystretch}{1.2}
+		\begin{subtable}{.58\textwidth}
+			\begin{tabular}{l | l}
+				\textbf{Name}                 & \textbf{Student number} \\ \hline\hline
+				Vincent Van Schependom        & s251739                 \\ \hline
+				Diego Armando Mijares Ledezma & s251777                 \\ \hline
+				Albert Joe Jensen             & s204601
+			\end{tabular}
+			\caption{Group members.}
+			\label{table:members}
+		\end{subtable}
+		\begin{subtable}{.4\textwidth}
+			\begin{tabular}{l | *{3}{|r}}
+				\textbf{Task} & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
+				Section 1     & 0\%             & 0\%            & 0\%            \\ \hline
+				Section 2     & 0\%             & 0\%           & 0\%            \\ \hline
+				Section 3     & 0\%             & 0\%           & 0\%            \\ \hline
+				\LaTeX        & 0\%             & 0\%            & 0\%
+			\end{tabular}
+			\caption{Contributions \& responsabilities table.}
+			\label{table:contributions}
+		\end{subtable}
+		\caption{Group information \& work distribution.}
+	\end{table}
+
+	\section*{Introduction}
+
+	The objective of this report is to apply the methods that were discussed during the second
+	section of the course \textit{Machine Learning} \cite{book} to a chosen dataset. The aim is to perform
+	relevant regression and classification to the data.
+
+	The particular dataset that is being investigated is -- just like in Project 1 -- the \textit{Glass Identification} dataset from 1987 by B. German \cite{dataset}. Table \ref{table:members} lists our full names and student numbers, while Table \ref{table:contributions} shows an overview of the contribution of each team member.
+
+	\tableofcontents
+
+	\newpage
+
+	\section{Regression}
+
+	\subsection{Linear regression}
+
+	\subsubsection{Aim}
+
+	\todo{Explain what variable is predicted based on which other variables and what you hope to
+		accomplish by the regression. Mention your feature transformation choices such as one-of-
+		K coding. Since we will use regularization momentarily, apply a feature transformation to
+		your data matrix X such that each column has mean 0 and standard deviation 1.}
+
+	\todo{...}
+
+	\subsubsection{Regularization}
+
+	\todo{Introduce a regularization parameter $\lambda$ as discussed in 14 of the lecture notes, and estimate
+		the generalization error for different values of $\lambda$. Specifically, choose a reasonable range of
+		values of $\lambda$ (ideally one where the generalization error first drop and then increases), and
+		for each value use $K = 10$ fold cross-validation (algorithm 5) to estimate the generalization
+		error. Include a figure of the estimated generalization error as a function of $\lambda$ in the report
+		and briefly discuss the result.}
+
+	\todo{Figure}
+
+	\todo{Reference figure}
+
+	\todo{...}
+
+	\subsubsection{Model interpretation}
+
+	\todo{Explain how the output, $y$, of the linear model with the lowest generalization error (as
+		determined in the previous question) is computed for a given input $x$. What is the effect
+		of an individual attribute in $x$ on the output, $y$, of the linear model? Does the effect of
+		individual attributes make sense based on your understanding of the problem?}
+
+	\todo{Final equation}
+
+	\todo{...}
+
+	\section{Regularized linear regression vs an Artificial Neural Network}
+
+	\todo{Rewrite this (concisely!) so that it isn't an exact copy of the assignment}
+
+	In this section, we will compare three models: the regularized linear re-
+	gression model from the previous section, an artificial neural network (ANN) and a baseline. We
+	are interested in two questions: Is one model better than the other? Is either model better than
+	a trivial baseline?. We will attempt to answer these questions with two-level cross-validation.
+
+	\todo{Create the table as in the assignment (Vincent)}
+
+	\todo{Write the accompanying text on how we retreived the data in the table.}
+
+	\todo{Write out the statistical comparisons using data from the table.}
+
+	\todo{TABLE: Include p-values and confidence intervals for the three pairwise tests in your report.}
+
+	\todo{Conclude on the results from the values in the table and reference the table.}
+
+
+	\section{Classification}
+
+	\todo{Choose method 2: ANN, CT, KNN, NB}
+
+	\subsection{Introduction}
+
+	\todo{Explain which classification problem you have chosen to solve. Is it a multi-class or binary
+		classification problem?}
+
+	\subsection{Logistic regression vs [...method 2...]}
+
+	\todo{Rewrite the assignment below such that it (consisely!) states what we will do in this section.}
+
+	We will compare logistic regression, method 2 and a baseline. For logistic regression, we
+	will once more use $\lambda$ as a complexity-controlling parameter, and for method 2 a relevant
+	complexity controlling parameter and range of values. We recommend this choice is made
+	based on a trial run, which you do not need to report. Describe which parameter you have
+	chosen and the possible values of the parameters you will examine. The baseline will be a
+	model which compute the largest class on the training data, and predict everything in the
+	test-data as belonging to that class (corresponding to the optimal prediction by a logistic
+	regression model with a bias term and no features).
+
+	\todo{Perform a statistical evaluation of your three models similar to the previous section. That
+		is, compare the three models pairwise.}
+
+	\todo{TABLE: Include p-values and confidence intervals for the three pairwise tests in your report.}
+
+	\todo{Conclude on the results from the values in the table and reference the table.}
+
+	\subsection{Interpretation of the LR model}
+
+	\todo{Train a logistic regression model using a suitable value of $\lambda$ (see previous exercise). Explain
+		how the logistic regression model make a prediction. Are the same features deemed relevant
+		as for the regression part of the report?}
+
+
+	\section*{Use of GenAI}
+
+	...
+
+	\bibliography{citations}
+	\bibliographystyle{unsrt}
+
+	\vspace*{1cm}
+	\appendix
+
+	\LARGE\bfseries Appendix
+
+	\normalsize\normalfont
+
+	\section{Repository and supplementary materials}
+	The full notebook, scripts, and generated figures for this project are available in the project repository:
+	\begin{quote}
+	\url{https://github.com/schependom/DTU\_machine-learning-projects/tree/main}
+	\end{quote}
+	This repository contains the data-loading and analysis code that produced the tables and figures cited
+	above (see the \texttt{figures/} folder for the PDF outputs referenced in the report).
+%
+%
+
+%	\section{Test}
+
+\end{document}
