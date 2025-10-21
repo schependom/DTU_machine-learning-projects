@@ -75,7 +75,7 @@
 
 	\section{Regression}
 
-	\todo{Make visualisations of the results in Table ref{table:e-test-regression}}
+	\todo{Make visualisations of the results in Table \ref{table:e-test-regression}}
 
 	\begin{table}
 		\centering
@@ -84,16 +84,17 @@
 			\hline
 			\textbf{Outer fold} & \multicolumn{2}{c||}{\textbf{ANN}} & \multicolumn{2}{c||}{\textbf{Linear regression}} & \textbf{Baseline}     \\ \hline\hline
 			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)  & \(\lambda_i^*\) & \(E_i^{\text{test}}\)          & \(E_i^{\text{test}}\) \\ \hline
-			1                   & 128       & \SI{ 2.847e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 9.516e-14 }{}             & \SI{ 9.893e-06 }{}    \\
-			2                   & 128       & \SI{ 1.572e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 3.239e-13 }{}             & \SI{ 7.295e-06 }{}    \\
-			3                   & 128       & \SI{ 7.582e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 7.883e-13 }{}             & \SI{ 7.229e-06 }{}    \\
-			4                   & 256       & \SI{ 1.983e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 1.095e-13 }{}             & \SI{ 8.142e-06 }{}    \\
-			5                   & 128       & \SI{ 2.452e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 2.309e-13 }{}             & \SI{ 3.843e-06 }{}    \\
-			6                   & 128       & \SI{ 2.165e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 1.261e-13 }{}             & \SI{ 4.273e-06 }{}    \\
-			7                   & 128       & \SI{ 1.983e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 4.525e-13 }{}             & \SI{ 8.609e-06 }{}    \\
-			8                   & 128       & \SI{ 1.222e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 1.560e-13 }{}             & \SI{ 1.072e-05 }{}    \\
-			9                   & 256       & \SI{ 5.593e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 6.452e-13 }{}             & \SI{ 1.782e-05 }{}    \\
-			10                  & 256       & \SI{ 9.549e-02 }{}     & \SI{ 0.01 }{}   & \SI{ 7.505e-14 }{}             & \SI{ 1.526e-05 }{}    \\ \hline
+1 & 500 & \SI{ 2.607e-02 }{} & \SI{ 0.797 }{} & \SI{ 1.600e-06 }{} & \SI{ 1.970e-05 }{} \\
+2 & 480 & \SI{ 1.327e-02 }{} & \SI{ 2.84 }{} & \SI{ 4.249e-07 }{} & \SI{ 1.228e-05 }{} \\
+3 & 230 & \SI{ 3.239e-02 }{} & \SI{ 0.325 }{} & \SI{ 4.821e-07 }{} & \SI{ 4.482e-06 }{} \\
+4 & 190 & \SI{ 1.592e-02 }{} & \SI{ 0.167 }{} & \SI{ 9.633e-07 }{} & \SI{ 5.047e-06 }{} \\
+5 & 120 & \SI{ 1.030e-02 }{} & \SI{ 1.43 }{} & \SI{ 1.500e-06 }{} & \SI{ 3.080e-06 }{} \\
+6 & 500 & \SI{ 3.226e-03 }{} & \SI{ 0.01 }{} & \SI{ 2.142e-06 }{} & \SI{ 5.982e-06 }{} \\
+7 & 120 & \SI{ 1.603e-02 }{} & \SI{ 0.325 }{} & \SI{ 1.284e-06 }{} & \SI{ 8.186e-06 }{} \\
+8 & 240 & \SI{ 3.639e-02 }{} & \SI{ 0.01 }{} & \SI{ 1.018e-06 }{} & \SI{ 7.210e-06 }{} \\
+9 & 290 & \SI{ 6.221e-02 }{} & \SI{ 1.27 }{} & \SI{ 1.637e-07 }{} & \SI{ 1.946e-05 }{} \\
+10 & 500 & \SI{ 2.641e-02 }{} & \SI{ 3 }{} & \SI{ 5.225e-07 }{} & \SI{ 7.245e-06 }{} \\
+			\hline
 		\end{tabular}
 		\caption{Summary of two-level cross validation for predicting \todo{see Python script}. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered models.}
 		\label{table:e-test-regression}
@@ -165,16 +166,17 @@
 			\hline
 			\textbf{Outer fold} & \multicolumn{2}{c||}{\textbf{\todo{Decision Tree?}}} & \multicolumn{2}{c||}{\textbf{Logistic regression}} & \textbf{Baseline}     \\ \hline\hline
 			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)                    & \(\lambda_i^*\)  & \(E_i^{\text{test}}\)           & \(E_i^{\text{test}}\) \\ \hline
-			1                   & 10        & \SI{ 1.36364e-01 }{}                     & \SI{ 0.001 }{}   & \SI{ 2.27273e-01 }{}            & \SI{ 6.36364e-01 }{}  \\
-			2                   & 6         & \SI{ 4.09091e-01 }{}                     & \SI{ 0.00886 }{} & \SI{ 2.72727e-01 }{}            & \SI{ 6.81818e-01 }{}  \\
-			3                   & 4         & \SI{ 4.54545e-01 }{}                     & \SI{ 0.00886 }{} & \SI{ 4.09091e-01 }{}            & \SI{ 5.90909e-01 }{}  \\
-			4                   & 4         & \SI{ 5.00000e-01 }{}                     & \SI{ 0.00886 }{} & \SI{ 4.54545e-01 }{}            & \SI{ 5.45455e-01 }{}  \\
-			5                   & 7         & \SI{ 2.85714e-01 }{}                     & \SI{ 0.001 }{}   & \SI{ 3.33333e-01 }{}            & \SI{ 6.19048e-01 }{}  \\
-			6                   & 10        & \SI{ 4.76190e-01 }{}                     & \SI{ 0.001 }{}   & \SI{ 5.71429e-01 }{}            & \SI{ 7.14286e-01 }{}  \\
-			7                   & 8         & \SI{ 2.85714e-01 }{}                     & \SI{ 0.00886 }{} & \SI{ 3.33333e-01 }{}            & \SI{ 7.14286e-01 }{}  \\
-			8                   & 5         & \SI{ 1.42857e-01 }{}                     & \SI{ 0.0183 }{}  & \SI{ 2.38095e-01 }{}            & \SI{ 6.19048e-01 }{}  \\
-			9                   & 10        & \SI{ 4.76190e-01 }{}                     & \SI{ 0.001 }{}   & \SI{ 3.33333e-01 }{}            & \SI{ 8.57143e-01 }{}  \\
-			10                  & 3         & \SI{ 4.28571e-01 }{}                     & \SI{ 0.0183 }{}  & \SI{ 4.76190e-01 }{}            & \SI{ 8.09524e-01 }{}  \\ \hline
+1 & 3 & \SI{ 0.4091 }{} & \SI{ 0.336 }{} & \SI{ 0.2273 }{} & \SI{ 0.5455 }{} \\
+2 & 6 & \SI{ 0.2273 }{} & \SI{ 0.0785 }{} & \SI{ 0.3182 }{} & \SI{ 0.5000 }{} \\
+3 & 15 & \SI{ 0.3182 }{} & \SI{ 0.00886 }{} & \SI{ 0.4091 }{} & \SI{ 0.8182 }{} \\
+4 & 3 & \SI{ 0.3636 }{} & \SI{ 0.0379 }{} & \SI{ 0.4545 }{} & \SI{ 0.9091 }{} \\
+5 & 5 & \SI{ 0.3333 }{} & \SI{ 0.00886 }{} & \SI{ 0.2857 }{} & \SI{ 0.5714 }{} \\
+6 & 6 & \SI{ 0.4762 }{} & \SI{ 0.00428 }{} & \SI{ 0.4286 }{} & \SI{ 0.8095 }{} \\
+7 & 5 & \SI{ 0.2857 }{} & \SI{ 0.00428 }{} & \SI{ 0.3333 }{} & \SI{ 0.6667 }{} \\
+8 & 10 & \SI{ 0.2857 }{} & \SI{ 0.336 }{} & \SI{ 0.3333 }{} & \SI{ 0.7619 }{} \\
+9 & 4 & \SI{ 0.3333 }{} & \SI{ 0.00428 }{} & \SI{ 0.3810 }{} & \SI{ 0.6667 }{} \\
+10 & 7 & \SI{ 0.3333 }{} & \SI{ 0.695 }{} & \SI{ 0.4762 }{} & \SI{ 0.8095 }{} \\
+\hline
 		\end{tabular}
 		\caption{Summary of two-level cross validation for predicting the glass type. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered classificationmodels. \todo{Change $\lambda$ to $C$?}}
 		\label{table:e-test-classification}
