@@ -75,9 +75,108 @@
 
 	\section{Regression}
 
-	\todo{Make visualisations of the results in Table \ref{table:e-test-regression}}
+	We aim to predict the refractive index (\texttt{RI}) of glass samples from their chemical composition: the oxide
+	components (\texttt{Na}, \texttt{Mg}, \texttt{Al}, \texttt{Si}, \texttt{K}, \texttt{Ca}, \texttt{Ba}, and \texttt{Fe}) and the categorical variable \texttt{Type}. Predicting \texttt{RI} is formulated
+	as a regression problem where we evaluate the performance of a regularized linear model (Ridge Regression),
+	an artificial neural network (ANN), and a trivial baseline predictor, which always predicts the mean \texttt{RI} of the training set.
+	Numerical features are standardized, as argued previously in Report 1 \cite{report1}, and categorical variables are encoded using one-hot encoding.
 
-	\begin{table}
+	\todo{Add report 1 to the bibliography.}
+
+	\subsection{Regularized linear regression}
+
+	\subsubsection{Selecting the regularization parameter $\lambda$}
+
+	To investigate the overfitting prevention effect of regularization, we evaluated Ridge Regression models
+	across a wide range of regularization variable values from $\lambda = 10^{-2}$ to $10^{5}$ (in 50 logarithmic steps) using $K=10$-fold
+	cross-validation. Figure~\ref{fig:rlr_mse_vs_lambda} shows a logarithmic plot of the average mean squared
+	error (MSE) on the validation sets across all folds -- which is an estimate $\hat{E}^{\text{gen}}$ of the generalization error -- as a function of $\lambda$.
+
+	The minimum average validation error was found at
+	$\hat{\lambda} = \num{0.2683}$ with an average validation set MSE over all 10 of \num{1.003e-6}.
+	We observe that the curve of MSE is relatively flat around the optimum, indicating
+	a stable solution. As the regularization parameter $\lambda$ increases above $10$, and larger coefficients thus get more penalized, the model underfits, leading to a
+	gradual rise in error to $\hat{E}^{\text{gen}} \approx \num{1e-5}$. Conversely, smaller values ($\lambda < 10^{-1}$) result in marginally higher average validation MSE due to overfitting.
+
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=0.75\textwidth]{figures/rlr_mse_vs_lambda.pdf}
+		\caption{Mean squared error (MSE) versus regularization strength $\lambda$
+		for Ridge regression using nested cross-validation. The optimal $\lambda$
+		($\hat{\lambda}=0.2683$) achieved a minimum average MSE of $1.0033\times10^{-6}$.}
+		\label{fig:rlr_mse_vs_lambda}
+	\end{figure}
+
+	\todo{Create the figure that visualises the selected coefficients based on lambda (copy paste from latest exercise session and look at my two images in WhatsApp.)}
+
+	\todo{Add these images here.}
+
+	\todo{Add captions, reference from text and elaborate on observations.}
+
+
+
+
+	\subsubsection{Model interpretation}
+
+	A final Ridge Regression model was trained on the \textit{entire} dataset using the optimal
+	regularization parameter $\hat{\lambda}=0.2683$. For a given input $\mathbf{x}$, the predicted refractive index $\hat{y} = \texttt{RI}$ is given by:
+
+	\begin{align*}
+		\texttt{RI} &= \beta_0   & + & \beta_1 \cdot \texttt{Na}           & + & \beta_2 \cdot \texttt{Mg}           & + & \beta_3 \cdot \texttt{Al}                 &  \\
+		             &           & + & \beta_4 \cdot \texttt{Si}           & + & \beta_5 \cdot \texttt{K}            & + & \beta_6 \cdot \texttt{Ca}                 &  \\
+		             &           & + & \beta_7 \cdot \texttt{Ba}           & + & \beta_8 \cdot \texttt{Fe}           & + & \beta_9 \cdot \texttt{BW-FP}              &  \\
+		             &           & + & \beta_{10} \cdot \texttt{BW-NFP}    & + & \beta_{11} \cdot \texttt{VW-FP}     & + & \beta_{12} \cdot \texttt{containers}      &   \\
+		             &           & + & \beta_{13} \cdot \texttt{headlamps} & + & \beta_{14} \cdot \texttt{tableware} & + & \beta_{15} \cdot \texttt{vehicle windows} & \\
+					&= \num{000} & + & \num{000} \cdot \texttt{Na}           & + & \num{000} \cdot \texttt{Mg}           & + & \num{000} \cdot \texttt{Al}                 &  \\
+		             &           & + & \num{000} \cdot \texttt{Si}           & + & \num{000} \cdot \texttt{K}            & + & \num{000} \cdot \texttt{Ca}                 &  \\
+		             &           & + & \num{000} \cdot \texttt{Ba}           & + & \num{000} \cdot \texttt{Fe}           & + & \num{000} \cdot \texttt{BW-FP}              &  \\
+		             &           & + & \num{000} \cdot \texttt{BW-NFP}    & + & \num{000} \cdot \texttt{VW-FP}     & + & \num{000} \cdot \texttt{containers}      &   \\
+		             &           & + & \num{000} \cdot \texttt{headlamps} & + & \num{000} \cdot \texttt{tableware} & + & \num{000} \cdot \texttt{vehicle windows} &
+	\end{align*}
+
+	\todo{Fill in the coefficients above based on the Python output.}
+
+	These coefficients reveal the relative contribution of each oxide concentration ($\beta_1$ to $\beta_8$) and glass type
+	(one hot encoded $\beta_9$ to $\beta_{15}$) to the refractive index (\texttt{RI}).
+
+	The elements \texttt{Ca} and \texttt{Ba} exhibit the
+	largest positive coefficients, implying that increasing these oxides raises the estimated refractive index in this model.
+	Conversely, \texttt{Si}, \texttt{Al}, and \texttt{Na} have negative coefficients,
+	indicating that higher concentrations of these oxides decrease the estimated refractive index. The small magnitude of coefficients for
+	\texttt{Mg} and \texttt{Fe} suggests a weaker influence on the estimated refractive index.
+
+	\todo{Discuss the one-hot-encoded categorical variables here as well.}
+
+
+	\subsubsection{Evaluation of the Ridge model}
+
+
+	To verify the predictive performance of the final Ridge model,
+	we evaluated it on the full dataset using the optimal $\hat{\lambda}$. This led to a mean squared error of $\text{MSE} = \num{8.5e-07}$ and a coefficient of determination of $R^2 = \num{0.91}$.
+
+	Figure~\ref{fig:rlr_pred_vs_actual} shows predicted versus actual \texttt{RI} values.
+	The points lie closely along the identity line, confirming accurate predictions.
+	The residuals in Figure~\ref{fig:rlr_residuals} are randomly distributed around
+	zero, suggesting no systematic bias or heteroscedasticity.
+
+	\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.45\textwidth]{figures/rlr_predicted_vs_actual.pdf}
+	\includegraphics[width=0.45\textwidth]{figures/rlr_residuals_vs_predicted.pdf}
+	\caption{Verification of the regularized Ridge regression model.
+	Left: predicted versus actual refractive index (RI).
+	Right: residuals versus predicted RI. The model shows a high determination coefficient $R^2 = \num{0.91}$ and
+	randomly distributed residuals, confirming stable behavior.}
+	\label{fig:rlr_pred_vs_actual}
+	\label{fig:rlr_residuals}
+	\end{figure}
+
+
+
+
+	\subsection{Comparison of regression models}
+
+		\begin{table}
 		\centering
 		\renewcommand{\arraystretch}{1.2}
 		\begin{tabular}{| r || l | l || l | l || l |}
@@ -96,206 +195,74 @@
 10 & 500 & \SI{ 2.641e-02 }{} & \SI{ 3 }{} & \SI{ 5.225e-07 }{} & \SI{ 7.245e-06 }{} \\
 			\hline
 		\end{tabular}
-		\caption{Summary of two-level cross validation for predicting \todo{see Python script}. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered models.}
+		\caption{Summary of two-level cross validation for predicting the refractive index \texttt{RI} based on the chemical composition. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered models.}
 		\label{table:e-test-regression}
 	\end{table}
 
-	\subsection{Linear regression}
-
-	\subsubsection{Aim}
-
-	\todo{Explain what variable is predicted based on which other variables and what you hope to
-		accomplish by the regression. Mention your feature transformation choices such as one-of-
-		K coding. Since we will use regularization momentarily, apply a feature transformation to
-		your data matrix X such that each column has mean 0 and standard deviation 1.}
-
-	We predict the refractive index (RI) of glass samples from their chemical composition: the oxide
-	components Na, Mg, Al, Si, K, Ca, Ba, and Fe, and the categorical glass Type. Predicting RI is formulated
-	as a regression problem where we evaluate the performance of a regularized linear model (Ridge),
-	an artificial neural network (ANN), and a trivial baseline predictor (the mean RI of the training set).
-	Numerical features are standardized and categorical ones are encoded appropriately inside the model
-	preprocessing pipeline to avoid leakage during cross-validation.
-
-
-	\subsubsection{Regularization}
-
-	\todo{Introduce a regularization parameter $\lambda$ as discussed in 14 of the lecture notes, and estimate
-		the generalization error for different values of $\lambda$. Specifically, choose a reasonable range of
-		values of $\lambda$ (ideally one where the generalization error first drop and then increases), and
-		for each value use $K = 10$ fold cross-validation (algorithm 5) to estimate the generalization
-		error. Include a figure of the estimated generalization error as a function of $\lambda$ in the report
-		and briefly discuss the result.}
-
-	\todo{Figure}
-
-	\todo{Reference figure}
-
-	\subsubsection*{Regularization (Ridge Regression)}
-
-	To investigate the effect of regularization, we evaluated Ridge regression models
-	across a wide range of $\lambda$ values from $10^{-2}$ to $10^{5}$ using nested
-	cross-validation. Figure~\ref{fig:rlr_mse_vs_lambda} shows the average mean squared
-	error (MSE) as a function of $\lambda$ on a logarithmic scale.
-
-	The minimum average validation error was found at
-	$\hat{\lambda} = 0.2683$ with an average MSE of $1.0033\times10^{-6}$.
-	We observe that the curve of MSE is relatively flat around the optimum, indicating
-	a stable solution and that the regularization term does not heavily penalize the fit.
-	As $\lambda$ increases above $10^2$, the model underfits slightly, leading to a
-	gradual rise in error. Conversely, smaller $\lambda$ values ($<10^{-2}$) result
-	in marginally higher MSE due to overfitting effects.
-
-	\begin{figure}[ht]
+	\begin{figure}
 		\centering
-		\includegraphics[width=0.75\textwidth]{figures/rlr_mse_vs_lambda.pdf}
-		\caption{Mean squared error (MSE) versus regularization strength $\lambda$
-		for Ridge regression using nested cross-validation. The optimal $\lambda$
-		($\hat{\lambda}=0.2683$) achieved a minimum average MSE of $1.0033\times10^{-6}$.}
-		\label{fig:rlr_mse_vs_lambda}
+		\includegraphics[width=0.75\textwidth]{figures/regression_test_errors_by_fold.pdf}
+		\caption{Test errors $E_i^\text{test}$ across outer folds for each regression model.
+			\todo{Elaborate on the observations in this caption.}, \todo{Reference this figure.}, \todo{Mention this is a semilog plot.}}
+		\label{fig:regression_test_errors_by_fold}
 	\end{figure}
 
+	\subsubsection{Two-level cross-validation}
 
+	This section compares regularized linear regression (from the previous section), an artificial neural network (ANN), and a baseline model. Two-level cross-validation is employed to determine relative performance of these models. As complexity-controlling parameter for the ANN, the number of hidden units $h$ is varied from $h=1$ to $h=990$ in steps of 10. The baseline models predicts the mean \texttt{RI} of the training set for all inputs.
 
+	The nested cross-validation results for the regression tasks are summarized in Table~\ref{table:e-test-regression}. \todo{Elaborate on the results of the table!}
 
-
-
-	\subsubsection{Model interpretation}
-
-	\todo{Explain how the output, $y$, of the linear model with the lowest generalization error (as
-		determined in the previous question) is computed for a given input $x$. What is the effect
-		of an individual attribute in $x$ on the output, $y$, of the linear model? Does the effect of
-		individual attributes make sense based on your understanding of the problem?}
-
-	\todo{Final equation}
-
-	\todo{...}
-
-	The Ridge regression model was retrained on the entire dataset using the optimal
-	regularization parameter $\hat{\lambda}=0.2683$. The resulting coefficients are
-	shown below.
-
-	\begin{verbatim}
-	Intercept: 1.518365421
-	Na: -0.0002574659853
-	Mg: 8.28374029e-05
-	Al: -0.0008566003247
-	Si: -0.001230770752
-	K: -0.0002729740513
-	Ca: 0.001898817879
-	Ba: 0.0006016976661
-	Fe: -1.922138819e-05
-	\end{verbatim}
-
-	These coefficients reveal the relative contribution of each oxide concentration
-	to the refractive index (RI). The elements \textbf{Ca} and \textbf{Ba} exhibit the
-	largest positive coefficients, implying that increasing these oxides raises RI.
-	Conversely, \textbf{Si}, \textbf{Al}, and \textbf{Na} have negative coefficients,
-	indicating that they decrease RI. The small magnitude of coefficients for
-	\textbf{Mg} and \textbf{Fe} suggests a weaker influence on RI.
-
-	Overall, the coefficients are consistent with physical expectations from glass
-	composition, confirming that Ridge regularization yields a stable and interpretable
-	linear model.
-
-
-	\subsection{Verification of the Ridge model}
-
-
-	To verify the correctness and predictive performance of the final Ridge model,
-	we evaluated it on the full dataset using the optimal $\hat{\lambda}$.
-	The resulting performance metrics were:
-
-	\[
-	\text{MSE} = 9.999\times10^{-7}, \quad R^2 = 0.8911
-	\]
-
-	Figure~\ref{fig:rlr_pred_vs_actual} shows predicted versus actual RI values.
-	The points lie closely along the identity line, confirming accurate predictions.
-	The residuals in Figure~\ref{fig:rlr_residuals} are randomly distributed around
-	zero, suggesting no systematic bias or heteroscedasticity.
-
-	\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.45\textwidth]{figures/rlr_predicted_vs_actual.pdf}
-	\includegraphics[width=0.45\textwidth]{figures/rlr_residuals_vs_predicted.pdf}
-	\caption{Verification of the regularized Ridge regression model.
-	Left: predicted versus actual refractive index (RI).
-	Right: residuals versus predicted RI. The model shows a high $R^2$ and
-	randomly distributed residuals, confirming stable behavior.}
-	\label{fig:rlr_pred_vs_actual}
-	\label{fig:rlr_residuals}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/ann_gen_error_vs_hidden_units.pdf}
+		\caption{Mean squared error (MSE) on the validation set versus number of hidden units $h$
+		for the artificial neural network using nested cross-validation.
+		The optimal $h$ ($\hat{h}=120$) achieved a minimum average MSE of \num{1.03e-2}. \todo{Reference this figure!}}
+		\label{fig:ann_mse_vs_h}
 	\end{figure}
 
+	\subsubsection{Statistical significance testing}
 
+	Paired $t$-tests were conducted across folds to assess whether performance differences were statistically significant. The results are summarized in Table~\ref{tab:reg_pairwise}.
+	All $p$-values below 0.05 indicate statistically significant differences.
 
+	\begin{table}
+		\centering
+		\renewcommand{\arraystretch}{1.2}
+		\begin{tabular}{ l || r | r | r | r | r | r}
+			\textbf{Model comparison} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}$} & \textbf{$t$-statistic} & \textbf{$p$-value} & \textbf{$t_{0.05}$} & \textbf{$t_{0.95}$} \\ \hline \hline
+			ANN vs RLR                & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
+			ANN vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
+			RLR vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\
+		\end{tabular}
+		\caption{Pairwise comparison of regression models (ANN = Artificial Neural Network, RLR = Regularized Linear Regression) using paired $t$-tests across outer folds.
+		Mean differences $\hat{\mu}$ and standard deviations $\hat{\sigma}$ in test error $E^{\text{test}}$, $t$-statistics, and $p$-values are reported, as well as a 95\% confidence interval $[t_{0.05}, t_{0.95}]$.
+		All comparisons show statistically significant differences ($p<0.05$). \todo{Fill in the numbers based on the Python output.}}
+		\label{tab:reg_pairwise}
+	\end{table}
 
-	\subsection{Regularized linear regression vs an Artificial Neural Network}
+	\todo{Check if we need to elaborate further / if this text contains mistakes:}
 
-	\todo{Rewrite this (concisely!) so that it isn't an exact copy of the assignment}
-
-	This section compares regularized linear regression, an artificial neural network, and a baseline model using two-level cross-validation to determine relative performance.
-
-	\todo{Create the table as in the assignment (Vincent) (hola my name is diego and i would like to say bon appetite)}
-
-	\todo{Write the accompanying text on how we retreived the data in the table.}
-
-	\todo{Write out the statistical comparisons using data from the table.}
-
-	\todo{TABLE: Include p-values and confidence intervals for the three pairwise tests in your report.}
-
-	\todo{Conclude on the results from the values in the table and reference the table.}
-
-	The nested cross-validation results for the regression tasks compared three models:
-	an artificial neural network (ANN), the regularized Ridge regression (RLR),
-	and a baseline mean predictor. Paired t-tests were conducted across folds to assess
-	whether performance differences were statistically significant.
-
-	The results are summarized in Table~\ref{tab:reg_pairwise}.
-	All p-values below 0.05 indicate statistically significant differences.
-
-	\input{figures/regression_pairwise_table.tex}
-
-	From the results:
 	\begin{itemize}
+
 		\item \textbf{ANN vs RLR:} The ANN achieved a lower average test error, with a mean
 		difference of $0.0242 \pm 0.0169$ ($t=4.54$, $p=0.0014$). This indicates the ANN
 		significantly outperforms Ridge regression on the RI prediction task.
+
 		\item \textbf{ANN vs Baseline:} The ANN also significantly outperformed the baseline
 		($t=4.54$, $p=0.0014$), confirming that it captures non-linearities missed by
 		linear models.
+
 		\item \textbf{RLR vs Baseline:} Ridge regression slightly outperformed the baseline
 		(mean difference $-8.26\times10^{-6}$, $t=-4.25$, $p=0.0021$), confirming that even
 		a regularized linear model provides small but significant improvements over the
 		naive predictor.
+
 	\end{itemize}
 
 	The ANN's advantage is thus both statistically and practically significant,
 	while the Ridge regression, although simpler, remains interpretable and competitive.
-
-	\subsection*{1.3 Classification Model Comparison}
-
-	For the classification task, we compared a decision tree, a logistic regression model,
-	and a baseline classifier. Paired t-tests across outer folds were used to assess
-	statistical significance. The results are summarized in
-	Table~\ref{tab:cls_pairwise}.
-
-	\input{figures/classification_pairwise_table.tex}
-
-	Interpretation:
-	\begin{itemize}
-		\item \textbf{Tree vs LogReg:} The difference in accuracy ($-0.0281$) is not statistically
-		significant ($p=0.375$), suggesting both models perform similarly.
-		\item \textbf{Tree vs Baseline:} The decision tree significantly outperformed
-		the baseline ($t=-8.91$, $p<10^{-5}$), indicating it captures meaningful
-		structure in the data.
-		\item \textbf{LogReg vs Baseline:} Logistic regression also significantly
-		outperformed the baseline ($t=-13.34$, $p=3.1\times10^{-7}$), showing that even
-		a simple linear classifier captures predictive signal.
-	\end{itemize}
-
-	In summary, both classification models substantially improve upon the baseline,
-	and their similar performance suggests that the data can be effectively separated
-	by relatively simple decision boundaries.
 
 	\section{Classification}
 
@@ -304,100 +271,130 @@
 		\renewcommand{\arraystretch}{1.2}
 		\begin{tabular}{| r || l | l || l | l || l |}
 			\hline
-			\textbf{Outer fold} & \multicolumn{2}{c||}{\textbf{\todo{Decision Tree?}}} & \multicolumn{2}{c||}{\textbf{Logistic regression}} & \textbf{Baseline}     \\ \hline\hline
-			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)                    & \(\lambda_i^*\)  & \(E_i^{\text{test}}\)           & \(E_i^{\text{test}}\) \\ \hline
-1 & 3 & \SI{ 0.4091 }{} & \SI{ 0.336 }{} & \SI{ 0.2273 }{} & \SI{ 0.5455 }{} \\
-2 & 6 & \SI{ 0.2273 }{} & \SI{ 0.0785 }{} & \SI{ 0.3182 }{} & \SI{ 0.5000 }{} \\
-3 & 15 & \SI{ 0.3182 }{} & \SI{ 0.00886 }{} & \SI{ 0.4091 }{} & \SI{ 0.8182 }{} \\
-4 & 3 & \SI{ 0.3636 }{} & \SI{ 0.0379 }{} & \SI{ 0.4545 }{} & \SI{ 0.9091 }{} \\
-5 & 5 & \SI{ 0.3333 }{} & \SI{ 0.00886 }{} & \SI{ 0.2857 }{} & \SI{ 0.5714 }{} \\
-6 & 6 & \SI{ 0.4762 }{} & \SI{ 0.00428 }{} & \SI{ 0.4286 }{} & \SI{ 0.8095 }{} \\
-7 & 5 & \SI{ 0.2857 }{} & \SI{ 0.00428 }{} & \SI{ 0.3333 }{} & \SI{ 0.6667 }{} \\
-8 & 10 & \SI{ 0.2857 }{} & \SI{ 0.336 }{} & \SI{ 0.3333 }{} & \SI{ 0.7619 }{} \\
-9 & 4 & \SI{ 0.3333 }{} & \SI{ 0.00428 }{} & \SI{ 0.3810 }{} & \SI{ 0.6667 }{} \\
-10 & 7 & \SI{ 0.3333 }{} & \SI{ 0.695 }{} & \SI{ 0.4762 }{} & \SI{ 0.8095 }{} \\
-\hline
+			\textbf{Outer fold} & \multicolumn{2}{c||}{\textbf{Decision Tree}} & \multicolumn{2}{c||}{\textbf{Logistic regression}} & \textbf{Baseline}     \\ \hline\hline
+			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)            & \(\lambda_i^*\)  & \(E_i^{\text{test}}\)           & \(E_i^{\text{test}}\) \\ \hline
+			1                   & 3         & \SI{ 0.4091 }{}                  & \SI{ 0.336 }{}   & \SI{ 0.2273 }{}                 & \SI{ 0.5455 }{}       \\
+			2                   & 6         & \SI{ 0.2273 }{}                  & \SI{ 0.0785 }{}  & \SI{ 0.3182 }{}                 & \SI{ 0.5000 }{}       \\
+			3                   & 15        & \SI{ 0.3182 }{}                  & \SI{ 0.00886 }{} & \SI{ 0.4091 }{}                 & \SI{ 0.8182 }{}       \\
+			4                   & 3         & \SI{ 0.3636 }{}                  & \SI{ 0.0379 }{}  & \SI{ 0.4545 }{}                 & \SI{ 0.9091 }{}       \\
+			5                   & 5         & \SI{ 0.3333 }{}                  & \SI{ 0.00886 }{} & \SI{ 0.2857 }{}                 & \SI{ 0.5714 }{}       \\
+			6                   & 6         & \SI{ 0.4762 }{}                  & \SI{ 0.00428 }{} & \SI{ 0.4286 }{}                 & \SI{ 0.8095 }{}       \\
+			7                   & 5         & \SI{ 0.2857 }{}                  & \SI{ 0.00428 }{} & \SI{ 0.3333 }{}                 & \SI{ 0.6667 }{}       \\
+			8                   & 10        & \SI{ 0.2857 }{}                  & \SI{ 0.336 }{}   & \SI{ 0.3333 }{}                 & \SI{ 0.7619 }{}       \\
+			9                   & 4         & \SI{ 0.3333 }{}                  & \SI{ 0.00428 }{} & \SI{ 0.3810 }{}                 & \SI{ 0.6667 }{}       \\
+			10                  & 7         & \SI{ 0.3333 }{}                  & \SI{ 0.695 }{}   & \SI{ 0.4762 }{}                 & \SI{ 0.8095 }{}       \\ \hline
 		\end{tabular}
 		\caption{Summary of two-level cross validation for predicting the glass type. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered classificationmodels. \todo{Change $\lambda$ to $C$?}}
 		\label{table:e-test-classification}
 	\end{table}
 
-	\todo{Choose method 2: ANN, CT, KNN, NB}
-
-	\todo{Make visualisations of the results in \ref{table:e-test-classification}}
-
 	\subsection{Introduction}
 
-	\todo{Explain which classification problem you have chosen to solve. Is it a multi-class or binary
-		classification problem?}
-	
-	We use the glass dataset to predict the glass \texttt{Type} using the oxide concentrations as
-	predictors. This is a multi-class classification problem. We compare Logistic Regression,
-	a Classification Tree (Decision Tree), and a trivial baseline that always predicts the most frequent
-	class present in the training set. All models were evaluated with nested (two-level) cross-validation.
+	We aim to predict the type of glass (\texttt{Type}), which can take on 7 values, of which only 6 are present in the training set, since there are no observations with \texttt{Type} = \texttt{VW-NFP}. We will use the oxide concentrations as
+	predictors to handle this \textit{multi-class classification problem}. We compare Logistic Regression (LR), a Classification Tree (Decision Tree, DT), and a trivial baseline that always predicts the most frequent
+	class present in the training set. All models were evaluated with nested (two-level) cross-validation and then statistically compared using paired $t$-tests across outer folds.
 
+	\subsection{Comparison of classification models}
 
-	\subsection{Logistic regression vs [Decision Tree]}
-
-	\todo{Rewrite the assignment below such that it (consisely!) states what we will do in this section.}
-	\todo{Perform a statistical evaluation of your three models similar to the previous section. That
-		is, compare the three models pairwise.}
-	\todo{TABLE: Include p-values and confidence intervals for the three pairwise tests in your report.}
-	\todo{Conclude on the results from the values in the table and reference the table.}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.75\textwidth]{figures/classification_test_errors_by_fold.pdf}
+		\caption{Test errors $E_i^\text{test}$ across outer folds for each classification model.
+		Both the Logistic Regression and Decision Tree outperform the baseline in all folds,
+		with Logistic Regression achieving slightly lower error on average., \todo{Mention this is a semilog plot.}}
+		\label{fig:classification_test_errors_by_fold}
+	\end{figure}
 
 	This section compares Logistic Regression and a Decision Tree classifier against the baseline.
-	For each outer fold, we optimized the regularization strength $C$ for Logistic Regression
+	For each outer fold, we optimized the regularization strength $C = 1/\lambda$ for Logistic Regression
 	and the maximum tree depth $h$ for the Decision Tree using inner cross-validation.
 	We then computed the test error $E_i^\text{test}$ on each outer test fold.
 
-	A paired statistical evaluation was performed across folds to assess whether
-	differences between model performances were significant. The results are shown in
-	Table~\ref{tab:cls_pairwise} and summarized below.
+	\todo{Mention the results in the table, reference the table using the following command and elaborate on them!}:
+	\verb*|\ref{table:e-test-classification}|
 
-	\input{figures/classification_pairwise_table.tex}
+	As shown in Table~\ref{table:e-test-classification}, ... \todo{Fill in based on the results!}
+
+	\subsection{Statistical significance testing}
+
+	Paired $t$-tests across outer folds were used to assess
+	statistical significance between the three classification models. The results are summarized in
+	Table~\ref{tab:cls_pairwise}.
+
+	\todo{Fill in the table below based on the Python output.}
+
+	\begin{table}
+		\centering
+		\renewcommand{\arraystretch}{1.2}
+		\begin{tabular}{ l || r | r | r | r | r | r}
+			\textbf{Model comparison} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}$} & \textbf{$t$-statistic} & \textbf{$p$-value} & \textbf{$t_{0.05}$} & \textbf{$t_{0.95}$} \\ \hline \hline
+			DT vs LR               & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
+			DT vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
+			LR vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\
+		\end{tabular}
+		\caption{Pairwise comparison of classification models (DT = Decision Tree, LR = Logistic Regression) using paired $t$-tests across outer folds.
+		Mean differences $\hat{\mu}$ and standard deviations $\hat{\sigma}$ in test error $E^{\text{test}}$, $t$-statistics, and $p$-values are reported, as well as a 95\% confidence interval $[t_{0.05}, t_{0.95}]$.
+		All comparisons show statistically significant differences ($p<0.05$). \todo{Fill in the numbers based on the Python output.}}
+		\label{tab:cls_pairwise}
+	\end{table}
+
+	We summarize the findings of these statistical tests below:
+
+	\todo{Check if we need to elaborate further / if this text contains mistakes. I don't know why, but Diego (or his AI) wrote two versions of this... So read both of them and pick the best one / merge them.}
 
 	\begin{itemize}
+
+		\item \textbf{Tree vs LogReg:} The difference in accuracy ($-0.0281$) is not statistically
+		significant ($p=0.375$), suggesting both models perform similarly.
+
+		\item \textbf{Tree vs Baseline:} The decision tree significantly outperformed
+		the baseline ($t=-8.91$, $p<10^{-5}$), indicating it captures meaningful
+		structure in the data.
+
+		\item \textbf{LogReg vs Baseline:} Logistic regression also significantly
+		outperformed the baseline ($t=-13.34$, $p=3.1\times10^{-7}$), showing that even
+		a simple linear classifier captures predictive signal.
+
+	\end{itemize}
+
+	\begin{itemize}
+
 		\item \textbf{Tree vs LogReg:} The mean difference in error was $-0.0281 \pm 0.0953$
 		($t=-0.93$, $p=0.375$), indicating no statistically significant difference. Both models perform comparably.
+
 		\item \textbf{Tree vs Baseline:} The Decision Tree significantly outperformed the baseline
 		with $t=-8.91$ and $p=9.25\times10^{-6}$, showing that even a simple tree captures
 		predictive relationships among the oxide features.
+
 		\item \textbf{LogReg vs Baseline:} Logistic Regression also achieved a strong improvement
 		over the baseline ($t=-13.34$, $p=3.12\times10^{-7}$), confirming that linear decision
 		boundaries explain most of the separability in the dataset.
+
 	\end{itemize}
+
+	In summary, both classification models substantially improve upon the baseline,
+	and their similar performance suggests that the data can be effectively separated
+	by relatively simple decision boundaries.
 
 	Figure~\ref{fig:classification_test_errors_by_fold} visualizes the outer test errors per fold for
 	the three models, clearly showing that both Logistic Regression and the Decision Tree
 	consistently outperform the baseline classifier.
 
-	\begin{figure}[ht]
-		\centering
-		\includegraphics[width=0.75\textwidth]{figures/classification_test_errors_by_fold.pdf}
-		\caption{Test errors $E_i^\text{test}$ across outer folds for each classification model.
-		Both the Logistic Regression and Decision Tree outperform the baseline in all folds,
-		with Logistic Regression achieving slightly lower error on average.}
-		\label{fig:classification_test_errors_by_fold}
-	\end{figure}
 
-	
 	\subsection{Interpretation of the LR model}
 
-	\todo{Train a logistic regression model using a suitable value of $\lambda$ (see previous exercise). Explain
-		how the logistic regression model make a prediction. Are the same features deemed relevant
-		as for the regression part of the report?}
-
-	A final Logistic Regression model was trained on the full dataset using the selected regularization
-	parameter $C^* = 1 / \hat{\lambda}$ from cross-validation.
-	The model assigns a weight vector $w_k$ to each class $k$, such that class scores are
+	A final Logistic Regression model was trained on the \textit{full} dataset using the selected regularization
+	parameter $C^* = 1 / \hat{\lambda}$ from cross-validation. The model assigns a weight vector $\bm{w}_k$ to each class $k$, such that class scores are
 	\[
-	s_k(x) = w_{k,0} + w_k^\top x,
+	s_k(\bm{x}) = w_{k,0} + \bm{w}_k^\top \bm{x},
 	\]
 	and predicted probabilities are given by the softmax transformation.
 
+	\todo{Check this part below for mistakes / elaborate further if needed:}
+
 	The sign and magnitude of each coefficient indicate how increasing a given oxide concentration
 	affects the log-odds of a sample belonging to class $k$. Features such as
-	\textbf{Si}, \textbf{Ca}, and \textbf{Ba} were among the strongest predictors, consistent with the
+	\texttt{Si}, \texttt{Ca}, and \texttt{Ba} were among the strongest predictors, consistent with the
 	results from the regression analysis, where these elements also exhibited large coefficients
 	in determining refractive index. This agreement suggests that the same chemical
 	components governing RI also drive differences between glass types.
@@ -406,19 +403,19 @@
 	coefficients, while the Decision Tree offers slightly lower performance but more explicit
 	decision boundaries.
 
+
 	\section*{Use of GenAI}
 
-	
-	Generative AI (ChatGPT by OpenAI) was used as a support tool during the project.
-	Its role was limited to assisting with code debugging, identifying and fixing minor
-	implementation errors, and helping to structure the LaTeX report consistently.
-	All analytical choices, data processing steps, and result interpretations were made
-	by the project members based on the actual model outputs.
+	Generative AI (ChatGPT by OpenAI and Claude by Anthropic) was used as a support tool during the project.
 
-	All code was executed and verified independently by the authors, and every numerical
-	result and figure included in the report originates from genuine model runs on the
-	provided dataset. Generative AI was not used to fabricate data, produce experimental
-	results, or replace the authors' understanding or reasoning.
+	Its role was limited to assisting with code debugging, identifying and fixing minor
+	implementation errors, and -- for Diego -- writing drafts for parts of the report -- which were later
+	heavily revised to form a cohesive final report.
+
+	All analytical choices, data processing steps, and result interpretations were made
+	by the project members \textit{themselves} based on the actual model outputs and \textit{their} understanding of the
+	underlying methods.
+
 
 	\bibliography{citations}
 	\bibliographystyle{unsrt}
@@ -437,9 +434,6 @@
 	\end{quote}
 	This repository contains the data-loading and analysis code that produced the tables and figures cited
 	above (see the \texttt{figures/} folder for the PDF outputs referenced in the report).
-%
-%
 
-%	\section{Test}
 
 \end{document}
