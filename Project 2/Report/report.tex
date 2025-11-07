@@ -15,6 +15,7 @@
 }
 
 \usepackage{subcaption}
+\usepackage{booktabs}
 
 \title{Machine Learning Project 2}
 \subtitle{Supervised Learning: Classification and Regression}
@@ -45,15 +46,16 @@
 			\caption{Group members.}
 			\label{table:members}
 		\end{subtable}
-		\\ \vspace*{0.5cm}
+		\\ \vspace*{0.25cm}
 		\begin{subtable}{\textwidth}
 			\centering
 			\begin{tabular}{l | *{3}{|r}}
-				\textbf{Task}                 & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
-				Training \& test loops & 0\%              &            0\% &             0\% \\ \hline
-				Coding visualisations         & 0\%              &            0\% &             0\% \\ \hline
-				Section 3                     & 0\%              &            0\% &             0\% \\ \hline
-				\LaTeX                        & 0\%              &            0\% &             0\%
+				\textbf{Task}                & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
+				Training \& test loops       & 90\%             &            10\% &             0\% \\ \hline
+				Coding visualisations        & 80\%             &           10\% &            10\% \\ \hline
+				Report writing               & 60\%             &           10\% &            30\% \\ \hline
+				Discussion \& interpretation & 40\%             &           40\% &            20\% \\ \hline
+				\LaTeX                       & 100\%            &            0\% &             0\%
 			\end{tabular}
 			\caption{Contributions \& responsabilities table.}
 			\label{table:contributions}
@@ -65,9 +67,7 @@
 
 	The objective of this report is to apply the methods that were discussed during the second
 	section of the course \textit{Machine Learning} \cite{book} to a chosen dataset. The aim is to perform
-	relevant regression and classification to the data.
-
-	The particular dataset that is being investigated is -- just like in Project 1 -- the \textit{Glass Identification} dataset from 1987 by B. German \cite{dataset}. Table \ref{table:members} lists our full names and student numbers, while Table \ref{table:contributions} shows an overview of the contribution of each team member.
+	relevant regression and classification to the data. The particular dataset that is being investigated is -- just like in Project 1 -- the \textit{Glass Identification} dataset from 1987 by B. German \cite{dataset}. Table \ref{table:members} lists our full names and student numbers, while Table \ref{table:contributions} shows an overview of the contribution of each team member.
 
 	\tableofcontents
 
@@ -80,8 +80,6 @@
 	as a regression problem where we evaluate the performance of a regularized linear model (Ridge Regression),
 	an artificial neural network (ANN), and a trivial baseline predictor, which always predicts the mean \texttt{RI} of the training set.
 	Numerical features are standardized, as argued previously in Report 1 \cite{report1}, and categorical variables are encoded using one-hot encoding.
-
-	\todo{Add report 1 to the bibliography.}
 
 	\subsection{Regularized linear regression}
 
@@ -100,59 +98,63 @@
 
 	\begin{figure}[ht]
 		\centering
-		\includegraphics[width=0.75\textwidth]{figures/rlr_mse_vs_lambda.pdf}
+		\includegraphics[width=0.75\textwidth]{Figures/rlr_mse_vs_lambda.pdf}
 		\caption{Mean squared error (MSE) versus regularization strength $\lambda$
 		for Ridge regression using nested cross-validation. The optimal $\lambda$
 		($\hat{\lambda}=0.2683$) achieved a minimum average MSE of $1.0033\times10^{-6}$.}
 		\label{fig:rlr_mse_vs_lambda}
 	\end{figure}
 
-	\todo{Create the figure that visualises the selected coefficients based on lambda (copy paste from latest exercise session and look at my two images in WhatsApp.)}
+	Following this, we visualize how the Ridge regression coefficients and the model errors evolve as a function of the regularization strength $\lambda$, as shown in Figure~\ref{fig:coefficients_and_errors_vs_lambda}. In the left panel of this figure, we observe that as $\lambda$ increases (stronger regularization),
+	the magnitude of all coefficients shrinks toward zero, indicating the penalization effect of the Ridge term. In the right panel, the mean squared error (MSE) for both the training and validation sets in each fold is plotted as a function of $\lambda$. For low regularization strengths,
+	the training error remains small while the validation error is higher, which may indicate some overfitting. As $\lambda$ increases, both errors rise, but the validation error
+	initially very slightly decreases (not visible to the eye with the graph due to scale), until reaching a minimum at the optimal value $\lambda^* \approx 0.27$,
+	before increasing, due to possibly underfitting. This demonstrates the trade-off between model complexity and regularization strength, with the selected $\lambda^*$
+	providing the best generalization performance.
 
-	\todo{Add these images here.}
 
-	\todo{Add captions, reference from text and elaborate on observations.}
-
-
-
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{Figures/coefficients_and_errors_vs_lambda.png}
+		\caption{Left: Evolution of Ridge regression coefficients as a function of the regularization strength $\lambda$.
+		Right: Mean squared error (MSE) for training and test sets averaged over cross-validation folds, with the optimal $\lambda$ indicated by a yellow star.}
+		\label{fig:coefficients_and_errors_vs_lambda}
+	\end{figure}
 
 	\subsubsection{Model interpretation}
 
 	A final Ridge Regression model was trained on the \textit{entire} dataset using the optimal
 	regularization parameter $\hat{\lambda}=0.2683$. For a given input $\mathbf{x}$, the predicted refractive index $\hat{y} = \texttt{RI}$ is given by:
-
 	\begin{align*}
-		\texttt{RI} &= \beta_0   & + & \beta_1 \cdot \texttt{Na}           & + & \beta_2 \cdot \texttt{Mg}           & + & \beta_3 \cdot \texttt{Al}                 &  \\
-		             &           & + & \beta_4 \cdot \texttt{Si}           & + & \beta_5 \cdot \texttt{K}            & + & \beta_6 \cdot \texttt{Ca}                 &  \\
-		             &           & + & \beta_7 \cdot \texttt{Ba}           & + & \beta_8 \cdot \texttt{Fe}           & + & \beta_9 \cdot \texttt{BW-FP}              &  \\
-		             &           & + & \beta_{10} \cdot \texttt{BW-NFP}    & + & \beta_{11} \cdot \texttt{VW-FP}     & + & \beta_{12} \cdot \texttt{containers}      &   \\
-		             &           & + & \beta_{13} \cdot \texttt{headlamps} & + & \beta_{14} \cdot \texttt{tableware} & + & \beta_{15} \cdot \texttt{vehicle windows} & \\
-					&= \num{000} & + & \num{000} \cdot \texttt{Na}           & + & \num{000} \cdot \texttt{Mg}           & + & \num{000} \cdot \texttt{Al}                 &  \\
-		             &           & + & \num{000} \cdot \texttt{Si}           & + & \num{000} \cdot \texttt{K}            & + & \num{000} \cdot \texttt{Ca}                 &  \\
-		             &           & + & \num{000} \cdot \texttt{Ba}           & + & \num{000} \cdot \texttt{Fe}           & + & \num{000} \cdot \texttt{BW-FP}              &  \\
-		             &           & + & \num{000} \cdot \texttt{BW-NFP}    & + & \num{000} \cdot \texttt{VW-FP}     & + & \num{000} \cdot \texttt{containers}      &   \\
-		             &           & + & \num{000} \cdot \texttt{headlamps} & + & \num{000} \cdot \texttt{tableware} & + & \num{000} \cdot \texttt{vehicle windows} &
+		\texttt{RI} & = \beta_0    & + & \beta_1 \cdot \texttt{Na}               & + & \beta_2 \cdot \texttt{Mg}               & + & \beta_3 \cdot \texttt{Al}                &  \\
+		            &              & + & \beta_4 \cdot \texttt{Si}               & + & \beta_5 \cdot \texttt{K}                & + & \beta_6 \cdot \texttt{Ca}               &  \\
+		            &              & + & \beta_7 \cdot \texttt{Ba}               & + & \beta_8 \cdot \texttt{Fe}               & + & \beta_9 \cdot \texttt{BW-FP}             &  \\
+		            &              & + & \beta_{10} \cdot \texttt{BW-NFP}        & + & \beta_{11} \cdot \texttt{VW-FP}         & + & \beta_{12} \cdot \texttt{containers}     &  \\
+		            &              & + & \beta_{13} \cdot \texttt{headlamps}     & + & \beta_{14} \cdot \texttt{tableware}     &   &                                          &  \\
+		            & = \num{1.52} & + & \num{3.17e-05} \cdot \texttt{Na}        & + & \num{1.04e-03} \cdot \texttt{Mg}        & - & \num{7.49e-04} \cdot \texttt{Al}         &  \\
+		            &              & - & \num{9.32e-04} \cdot \texttt{Si}        & + & \num{9.35e-05} \cdot \texttt{K}         & + & \num{2.68e-03} \cdot \texttt{Ca}         &  \\
+		            &              & + & \num{6.90e-04} \cdot \texttt{Ba}        & + & \num{1.50e-05} \cdot \texttt{Fe}        & - & \num{2.33e-04} \cdot \texttt{BW-FP}      &  \\
+		            &              & - & \num{1.75e-04} \cdot \texttt{BW-NFP}    & - & \num{1.14e-03} \cdot \texttt{VW-FP}     & + & \num{1.10e-04} \cdot \texttt{containers} &  \\
+		            &              & + & \num{1.31e-03} \cdot \texttt{headlamps} & + & \num{1.19e-04} \cdot \texttt{tableware} &   &                                          &
 	\end{align*}
 
-	\todo{Fill in the coefficients above based on the Python output.}
-
 	These coefficients reveal the relative contribution of each oxide concentration ($\beta_1$ to $\beta_8$) and glass type
-	(one hot encoded $\beta_9$ to $\beta_{15}$) to the refractive index (\texttt{RI}).
-
-	The elements \texttt{Ca} and \texttt{Ba} exhibit the
-	largest positive coefficients, implying that increasing these oxides raises the estimated refractive index in this model.
+	(one hot encoded $\beta_9$ to $\beta_{15}$) to the refractive index (\texttt{RI}). The elements \texttt{Ca} and \texttt{Ba} exhibit the largest positive coefficients, implying that increasing these oxides raises the estimated refractive index in this model.
 	Conversely, \texttt{Si}, \texttt{Al}, and \texttt{Na} have negative coefficients,
 	indicating that higher concentrations of these oxides decrease the estimated refractive index. The small magnitude of coefficients for
 	\texttt{Mg} and \texttt{Fe} suggests a weaker influence on the estimated refractive index.
 
-	\todo{Discuss the one-hot-encoded categorical variables here as well.}
+	Most of these categorical coefficients are very small in magnitude, indicating that the glass type has a relatively minor effect
+	on the refractive index compared to the chemical composition. \texttt{VW-FP} has a negative coefficient,
+	suggesting that this type slightly decreases the predicted \texttt{RI}. \texttt{vehicle windows} has a coefficient of 0. This does not mean it has no effect in reality; rather, there were too few observations for the model to estimate its effect.
+	In this model, while the categorical glass types are included, the chemical composition dominates the predictions of \texttt{RI}.
 
 
 	\subsubsection{Evaluation of the Ridge model}
 
 
 	To verify the predictive performance of the final Ridge model,
-	we evaluated it on the full dataset using the optimal $\hat{\lambda}$. This led to a mean squared error of $\text{MSE} = \num{8.5e-07}$ and a coefficient of determination of $R^2 = \num{0.91}$.
+	we evaluated it on the full dataset using the $\hat{\lambda}$. This led to a mean squared error of $\text{MSE} = \num{8.5e-07}$ and a coefficient of determination of $R^2 = \num{0.91}$.
 
 	Figure~\ref{fig:rlr_pred_vs_actual} shows predicted versus actual \texttt{RI} values.
 	The points lie closely along the identity line, confirming accurate predictions.
@@ -182,18 +184,17 @@
 		\begin{tabular}{| r || l | l || l | l || l |}
 			\hline
 			\textbf{Outer fold} & \multicolumn{2}{c||}{\textbf{ANN}} & \multicolumn{2}{c||}{\textbf{Linear regression}} & \textbf{Baseline}     \\ \hline\hline
-			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)  & \(\lambda_i^*\) & \(E_i^{\text{test}}\)          & \(E_i^{\text{test}}\) \\ \hline
-1 & 500 & \SI{ 2.607e-02 }{} & \SI{ 0.797 }{} & \SI{ 1.600e-06 }{} & \SI{ 1.970e-05 }{} \\
-2 & 480 & \SI{ 1.327e-02 }{} & \SI{ 2.84 }{} & \SI{ 4.249e-07 }{} & \SI{ 1.228e-05 }{} \\
-3 & 230 & \SI{ 3.239e-02 }{} & \SI{ 0.325 }{} & \SI{ 4.821e-07 }{} & \SI{ 4.482e-06 }{} \\
-4 & 190 & \SI{ 1.592e-02 }{} & \SI{ 0.167 }{} & \SI{ 9.633e-07 }{} & \SI{ 5.047e-06 }{} \\
-5 & 120 & \SI{ 1.030e-02 }{} & \SI{ 1.43 }{} & \SI{ 1.500e-06 }{} & \SI{ 3.080e-06 }{} \\
-6 & 500 & \SI{ 3.226e-03 }{} & \SI{ 0.01 }{} & \SI{ 2.142e-06 }{} & \SI{ 5.982e-06 }{} \\
-7 & 120 & \SI{ 1.603e-02 }{} & \SI{ 0.325 }{} & \SI{ 1.284e-06 }{} & \SI{ 8.186e-06 }{} \\
-8 & 240 & \SI{ 3.639e-02 }{} & \SI{ 0.01 }{} & \SI{ 1.018e-06 }{} & \SI{ 7.210e-06 }{} \\
-9 & 290 & \SI{ 6.221e-02 }{} & \SI{ 1.27 }{} & \SI{ 1.637e-07 }{} & \SI{ 1.946e-05 }{} \\
-10 & 500 & \SI{ 2.641e-02 }{} & \SI{ 3 }{} & \SI{ 5.225e-07 }{} & \SI{ 7.245e-06 }{} \\
-			\hline
+			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)  & \(\lambda_i^*\)      & \(E_i^{\text{test}}\)           & \(E_i^{\text{test}}\) \\ \hline
+			1                   & 500       & \SI{ 2.607e-02 }{}     & \SI{ 0.797 }{} & \SI{ 1.600e-06 }{}              & \SI{ 1.970e-05 }{}    \\
+			2                   & 480       & \SI{ 1.327e-02 }{}     & \SI{ 2.84 }{}  & \SI{ 4.249e-07 }{}              & \SI{ 1.228e-05 }{}    \\
+			3                   & 230       & \SI{ 3.239e-02 }{}     & \SI{ 0.325 }{} & \SI{ 4.821e-07 }{}              & \SI{ 4.482e-06 }{}    \\
+			4                   & 190       & \SI{ 1.592e-02 }{}     & \SI{ 0.167 }{} & \SI{ 9.633e-07 }{}              & \SI{ 5.047e-06 }{}    \\
+			5                   & 120       & \SI{ 1.030e-02 }{}     & \SI{ 1.43 }{}  & \SI{ 1.500e-06 }{}              & \SI{ 3.080e-06 }{}    \\
+			6                   & 500       & \SI{ 3.226e-03 }{}     & \SI{ 0.01 }{}  & \SI{ 2.142e-06 }{}              & \SI{ 5.982e-06 }{}    \\
+			7                   & 120       & \SI{ 1.603e-02 }{}     & \SI{ 0.325 }{} & \SI{ 1.284e-06 }{}              & \SI{ 8.186e-06 }{}    \\
+			8                   & 240       & \SI{ 3.639e-02 }{}     & \SI{ 0.01 }{}  & \SI{ 1.018e-06 }{}              & \SI{ 7.210e-06 }{}    \\
+			9                   & 290       & \SI{ 6.221e-02 }{}     & \SI{ 1.27 }{}  & \SI{ 1.637e-07 }{}              & \SI{ 1.946e-05 }{}    \\
+			10                  & 500       & \SI{ 2.641e-02 }{}     & \SI{ 3 }{}     & \SI{ 5.225e-07 }{}              & \SI{ 7.245e-06 }{}    \\ \hline
 		\end{tabular}
 		\caption{Summary of two-level cross validation for predicting the refractive index \texttt{RI} based on the chemical composition. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered models.}
 		\label{table:e-test-regression}
@@ -202,8 +203,7 @@
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.75\textwidth]{figures/regression_test_errors_by_fold.pdf}
-		\caption{Test errors $E_i^\text{test}$ across outer folds for each regression model.
-			\todo{Elaborate on the observations in this caption.}, \todo{Reference this figure.}, \todo{Mention this is a semilog plot.}}
+		\caption{Semilog plot of test errors $E_i^\text{test}$ across outer folds for each regression model.}
 		\label{fig:regression_test_errors_by_fold}
 	\end{figure}
 
@@ -211,58 +211,56 @@
 
 	This section compares regularized linear regression (from the previous section), an artificial neural network (ANN), and a baseline model. Two-level cross-validation is employed to determine relative performance of these models. As complexity-controlling parameter for the ANN, the number of hidden units $h$ is varied from $h=1$ to $h=990$ in steps of 10. The baseline models predicts the mean \texttt{RI} of the training set for all inputs.
 
-	The nested cross-validation results for the regression tasks are summarized in Table~\ref{table:e-test-regression}. \todo{Elaborate on the results of the table!}
+	The nested cross-validation results for the regression tasks are summarized in Table~\ref{table:e-test-regression}. These results show that the Linear Regression model consistently achieves extremely low test errors across all folds, demonstrating excellent generalization and stable performance. In contrast, the ANN consistently produces higher
+	test errors (0.003 to 0.062) across all folds, indicating poor generalization and sensitivity to hyperparameter choice. The baseline
+	predictor performs better than the ANN but worse than Linear Regression, confirming that while a simple model captures some structure in the data,
+	Linear Regression clearly provides the most accurate and reliable predictions. The test errors are plotted in Figure~\ref{fig:regression_test_errors_by_fold},
+	illustrating the consistent superiority of Linear Regression over both the ANN and baseline models.
+
+	Figure~\ref{fig:ann_mse_vs_h} shows the mean squared error (MSE) on the validation set versus the number of hidden units.
+	We observe that the optimal $\hat{h}=120$ achieved the minimum average MSE of \num{1.03e-2}, indicating that a moderately sized hidden layer performs best (we can say 120 is moderate out of 960 because it is substantial but not big in the context).
 
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.9\textwidth]{figures/ann_gen_error_vs_hidden_units.pdf}
 		\caption{Mean squared error (MSE) on the validation set versus number of hidden units $h$
 		for the artificial neural network using nested cross-validation.
-		The optimal $h$ ($\hat{h}=120$) achieved a minimum average MSE of \num{1.03e-2}. \todo{Reference this figure!}}
+		The optimal $h$ ($\hat{h}=120$) achieved a minimum average MSE of \num{1.03e-2}.}
 		\label{fig:ann_mse_vs_h}
 	\end{figure}
 
 	\subsubsection{Statistical significance testing}
 
-	Paired $t$-tests were conducted across folds to assess whether performance differences were statistically significant. The results are summarized in Table~\ref{tab:reg_pairwise}.
+	Paired $t$-tests were conducted across folds to assess whether performance differences were statistically significant, following Setup I (11.3)
+	where the training set is fixed and only fold-wise variability is considered. The results are summarized in Table~\ref{tab:reg_pairwise}.
 	All $p$-values below 0.05 indicate statistically significant differences.
+
 
 	\begin{table}
 		\centering
 		\renewcommand{\arraystretch}{1.2}
 		\begin{tabular}{ l || r | r | r | r | r | r}
-			\textbf{Model comparison} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}$} & \textbf{$t$-statistic} & \textbf{$p$-value} & \textbf{$t_{0.05}$} & \textbf{$t_{0.95}$} \\ \hline \hline
-			ANN vs RLR                & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
-			ANN vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
-			RLR vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\
+			\textbf{Comparison} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}$} & \textbf{$t$} & \textbf{$p$-value} & \textbf{$t_{0.05}$} & \textbf{$t_{0.95}$} \\ \hline\hline
+			ANN-RLR                & \num{2.42e-02}       & \num{1.69e-02}          & \num{4.54e+00}         & \num{1.40e-03}     & \num{1.22e-02}      & \num{3.63e-02}      \\ \hline
+			ANN-Baseline           & \num{2.42e-02}       & \num{1.69e-02}          & \num{4.54e+00}         & \num{1.40e-03}     & \num{1.22e-02}      & \num{3.63e-02}      \\ \hline
+			RLR-Baseline           & \num{-8.26e-06}      & \num{6.15e-06}          & \num{-4.25e+00}        & \num{2.14e-03}     & \num{-1.27e-05}     & \num{-3.86e-06}
 		\end{tabular}
 		\caption{Pairwise comparison of regression models (ANN = Artificial Neural Network, RLR = Regularized Linear Regression) using paired $t$-tests across outer folds.
 		Mean differences $\hat{\mu}$ and standard deviations $\hat{\sigma}$ in test error $E^{\text{test}}$, $t$-statistics, and $p$-values are reported, as well as a 95\% confidence interval $[t_{0.05}, t_{0.95}]$.
-		All comparisons show statistically significant differences ($p<0.05$). \todo{Fill in the numbers based on the Python output.}}
+		All comparisons show statistically significant differences ($p<0.05$).}
 		\label{tab:reg_pairwise}
 	\end{table}
 
-	\todo{Check if we need to elaborate further / if this text contains mistakes:}
-
 	\begin{itemize}
+    \item \textbf{ANN vs RLR:} The ANN consistently shows higher test errors than Ridge Linear Regression,
+	with a mean difference of about 0.024, indicating a statistically significant gap in performance.
+    \item \textbf{ANN vs Baseline:} The ANN also performs worse than the baseline predictor, with a similar mean difference,
+	confirming its instability and poorer generalization.
+    \item \textbf{RLR vs Baseline:} Ridge Linear Regression slightly outperforms the baseline, with a very small negative mean difference,
+	but the confidence interval excludes zero, demonstrating that even a simple regularized linear model reliably improves predictions over the baseline.
+\end{itemize}
 
-		\item \textbf{ANN vs RLR:} The ANN achieved a lower average test error, with a mean
-		difference of $0.0242 \pm 0.0169$ ($t=4.54$, $p=0.0014$). This indicates the ANN
-		significantly outperforms Ridge regression on the RI prediction task.
-
-		\item \textbf{ANN vs Baseline:} The ANN also significantly outperformed the baseline
-		($t=4.54$, $p=0.0014$), confirming that it captures non-linearities missed by
-		linear models.
-
-		\item \textbf{RLR vs Baseline:} Ridge regression slightly outperformed the baseline
-		(mean difference $-8.26\times10^{-6}$, $t=-4.25$, $p=0.0021$), confirming that even
-		a regularized linear model provides small but significant improvements over the
-		naive predictor.
-
-	\end{itemize}
-
-	The ANN's advantage is thus both statistically and practically significant,
-	while the Ridge regression, although simpler, remains interpretable and competitive.
+These results clearly support the ranking \textbf{ANN $<$ Baseline $<$ RLR}, and Table~\ref{tab:reg_pairwise} quantifies the magnitude and statistical significance of the differences between models.
 
 	\section{Classification}
 
@@ -272,19 +270,19 @@
 		\begin{tabular}{| r || l | l || l | l || l |}
 			\hline
 			\textbf{Outer fold} & \multicolumn{2}{c||}{\textbf{Decision Tree}} & \multicolumn{2}{c||}{\textbf{Logistic regression}} & \textbf{Baseline}     \\ \hline\hline
-			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)            & \(\lambda_i^*\)  & \(E_i^{\text{test}}\)           & \(E_i^{\text{test}}\) \\ \hline
-			1                   & 3         & \SI{ 0.4091 }{}                  & \SI{ 0.336 }{}   & \SI{ 0.2273 }{}                 & \SI{ 0.5455 }{}       \\
-			2                   & 6         & \SI{ 0.2273 }{}                  & \SI{ 0.0785 }{}  & \SI{ 0.3182 }{}                 & \SI{ 0.5000 }{}       \\
-			3                   & 15        & \SI{ 0.3182 }{}                  & \SI{ 0.00886 }{} & \SI{ 0.4091 }{}                 & \SI{ 0.8182 }{}       \\
-			4                   & 3         & \SI{ 0.3636 }{}                  & \SI{ 0.0379 }{}  & \SI{ 0.4545 }{}                 & \SI{ 0.9091 }{}       \\
-			5                   & 5         & \SI{ 0.3333 }{}                  & \SI{ 0.00886 }{} & \SI{ 0.2857 }{}                 & \SI{ 0.5714 }{}       \\
-			6                   & 6         & \SI{ 0.4762 }{}                  & \SI{ 0.00428 }{} & \SI{ 0.4286 }{}                 & \SI{ 0.8095 }{}       \\
-			7                   & 5         & \SI{ 0.2857 }{}                  & \SI{ 0.00428 }{} & \SI{ 0.3333 }{}                 & \SI{ 0.6667 }{}       \\
-			8                   & 10        & \SI{ 0.2857 }{}                  & \SI{ 0.336 }{}   & \SI{ 0.3333 }{}                 & \SI{ 0.7619 }{}       \\
-			9                   & 4         & \SI{ 0.3333 }{}                  & \SI{ 0.00428 }{} & \SI{ 0.3810 }{}                 & \SI{ 0.6667 }{}       \\
-			10                  & 7         & \SI{ 0.3333 }{}                  & \SI{ 0.695 }{}   & \SI{ 0.4762 }{}                 & \SI{ 0.8095 }{}       \\ \hline
+			\(i\)               & \(h_i^*\) & \(E_i^{\text{test}}\)            & \(C^*\)      & \(E_i^{\text{test}}\)               & \(E_i^{\text{test}}\) \\ \hline
+			1                   & 3         & \num{ 0.4091 }                   & \num{ 2.98 } & \num{ 0.2273 }                      & \num{ 0.5455 }        \\
+			2                   & 6         & \num{ 0.2273 }                   & \num{ 12.7 } & \num{ 0.3182 }                      & \num{ 0.5 }           \\
+			3                   & 15        & \num{ 0.3182 }                   & \num{ 113 }  & \num{ 0.4091 }                      & \num{ 0.8182 }        \\
+			4                   & 3         & \num{ 0.3636 }                   & \num{ 26.4 } & \num{ 0.4545 }                      & \num{ 0.9091 }        \\
+			5                   & 5         & \num{ 0.3333 }                   & \num{ 113 }  & \num{ 0.2857 }                      & \num{ 0.5714 }        \\
+			6                   & 6         & \num{ 0.4762 }                   & \num{ 234 }  & \num{ 0.4286 }                      & \num{ 0.8095 }        \\
+			7                   & 5         & \num{ 0.2857 }                   & \num{ 234 }  & \num{ 0.3333 }                      & \num{ 0.6667 }        \\
+			8                   & 10        & \num{ 0.2857 }                   & \num{ 2.98 } & \num{ 0.3333 }                      & \num{ 0.7619 }        \\
+			9                   & 4         & \num{ 0.3333 }                   & \num{ 234 }  & \num{ 0.381 }                       & \num{ 0.6667 }        \\
+			10                  & 7         & \num{ 0.3333 }                   & \num{ 1.44 } & \num{ 0.4762 }                      & \num{ 0.8095 }        \\ \hline
 		\end{tabular}
-		\caption{Summary of two-level cross validation for predicting the glass type. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered classificationmodels. \todo{Change $\lambda$ to $C$?}}
+		\caption{Summary of two-level cross validation for predicting the glass type. Hyperparameters and test errors $E_i^\text{test}$ on $\mathcal{D}_i^\text{test}$ per outer fold $i$, for each of the three considered classification models.}
 		\label{table:e-test-classification}
 	\end{table}
 
@@ -301,46 +299,52 @@
 		\includegraphics[width=0.75\textwidth]{figures/classification_test_errors_by_fold.pdf}
 		\caption{Test errors $E_i^\text{test}$ across outer folds for each classification model.
 		Both the Logistic Regression and Decision Tree outperform the baseline in all folds,
-		with Logistic Regression achieving slightly lower error on average., \todo{Mention this is a semilog plot.}}
+		with Logistic Regression achieving slightly lower error on average. It is important to note that this is a semilogarithmic plot in which the $y$-axis only is on a logarithmic scale.}
 		\label{fig:classification_test_errors_by_fold}
 	\end{figure}
+
+	To better visualize the wide range of test errors across models, the results are also presented in a semilogarithmic plot,
+	where the y-axis is on a logarithmic scale. This representation highlights the consistently low errors of Linear Regression
+	relative to the baseline and the higher errors of the ANN, making performance differences between models visually apparent.
 
 	This section compares Logistic Regression and a Decision Tree classifier against the baseline.
 	For each outer fold, we optimized the regularization strength $C = 1/\lambda$ for Logistic Regression
 	and the maximum tree depth $h$ for the Decision Tree using inner cross-validation.
 	We then computed the test error $E_i^\text{test}$ on each outer test fold.
 
-	\todo{Mention the results in the table, reference the table using the following command and elaborate on them!}:
-	\verb*|\ref{table:e-test-classification}|
-
-	As shown in Table~\ref{table:e-test-classification}, ... \todo{Fill in based on the results!}
+	As shown in Table~\ref{table:e-test-classification}, the two-level cross-validation results reveal that the Decision Tree model
+	achieves the best test errors overall, outperforming the Logistic Regression in most cases, which can also be seen in Figure~\ref{fig:classification_test_errors_by_fold}
+	and also substantially surpassing the baseline. The Decision Tree is superior to
+	Logistic Regression in 7 out of 10 folds, suggesting that simple, non-overfitting structures suffice for this task. Logistic Regression hyperparameters $\lambda_i^*$ vary
+	widely (from \num{0.00428} to \SI{0.695}{}), reflecting data-dependent regularization needs. Nonetheless, it consistently beats the baseline
+	in all folds. Both models demonstrate robust improvements over the naive predictor, highlighting the value of even basic machine learning
+	approaches for glass type classification.
 
 	\subsection{Statistical significance testing}
 
 	Paired $t$-tests across outer folds were used to assess
-	statistical significance between the three classification models. The results are summarized in
+	statistical significance between the three classification models. The statistical significance analysis corresponds to Setup II (Section 11.4),
+	as it evaluates model performance across multiple random training/test splits (outer cross-validation folds) using paired t-tests.
+	This setup accounts for the variability in model performance due to different training sets, unlike Setup I (McNemar’s test), which applies
+	to a fixed train/test split. The results are summarized in
 	Table~\ref{tab:cls_pairwise}.
-
-	\todo{Fill in the table below based on the Python output.}
 
 	\begin{table}
 		\centering
 		\renewcommand{\arraystretch}{1.2}
-		\begin{tabular}{ l || r | r | r | r | r | r}
-			\textbf{Model comparison} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}$} & \textbf{$t$-statistic} & \textbf{$p$-value} & \textbf{$t_{0.05}$} & \textbf{$t_{0.95}$} \\ \hline \hline
-			DT vs LR               & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
-			DT vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\ \hline
-			LR vs Baseline           & \num{000}                & \num{000}            & \num{000}          & \num{000}           & \num{000}           & \num{000}           \\
-		\end{tabular}
+		\resizebox{\textwidth}{!}{\begin{tabular}{ l || r | r | r | r | r | r}
+				\textbf{Comparison} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}$} & \textbf{$t$} & \textbf{$p$-value} & \textbf{$t_{0.05}$} & \textbf{$t_{0.95}$} \\ \hline\hline
+				DT-LR               & \num{-2.81e-02}      & \num{9.53e-02}          & \num{-9.34e-01}        & \num{3.75e-01}     & \num{-9.63e-02}     & \num{4.00e-02}      \\ \hline
+				DT-Baseline         & \num{-3.69e-01}      & \num{1.31e-01}          & \num{-8.91e+00}        & \num{9.25e-06}     & \num{-4.63e-01}     & \num{-2.76e-01}     \\ \hline
+				LR-Baseline         & \num{-3.41e-01}      & \num{8.09e-02}          & \num{-1.33e+01}        & \num{3.12e-07}     & \num{-3.99e-01}     & \num{-2.83e-01}
+		\end{tabular}}
 		\caption{Pairwise comparison of classification models (DT = Decision Tree, LR = Logistic Regression) using paired $t$-tests across outer folds.
 		Mean differences $\hat{\mu}$ and standard deviations $\hat{\sigma}$ in test error $E^{\text{test}}$, $t$-statistics, and $p$-values are reported, as well as a 95\% confidence interval $[t_{0.05}, t_{0.95}]$.
-		All comparisons show statistically significant differences ($p<0.05$). \todo{Fill in the numbers based on the Python output.}}
+		All comparisons show statistically significant differences ($p<0.05$).}
 		\label{tab:cls_pairwise}
 	\end{table}
 
 	We summarize the findings of these statistical tests below:
-
-	\todo{Check if we need to elaborate further / if this text contains mistakes. I don't know why, but Diego (or his AI) wrote two versions of this... So read both of them and pick the best one / merge them.}
 
 	\begin{itemize}
 
@@ -357,28 +361,9 @@
 
 	\end{itemize}
 
-	\begin{itemize}
-
-		\item \textbf{Tree vs LogReg:} The mean difference in error was $-0.0281 \pm 0.0953$
-		($t=-0.93$, $p=0.375$), indicating no statistically significant difference. Both models perform comparably.
-
-		\item \textbf{Tree vs Baseline:} The Decision Tree significantly outperformed the baseline
-		with $t=-8.91$ and $p=9.25\times10^{-6}$, showing that even a simple tree captures
-		predictive relationships among the oxide features.
-
-		\item \textbf{LogReg vs Baseline:} Logistic Regression also achieved a strong improvement
-		over the baseline ($t=-13.34$, $p=3.12\times10^{-7}$), confirming that linear decision
-		boundaries explain most of the separability in the dataset.
-
-	\end{itemize}
-
 	In summary, both classification models substantially improve upon the baseline,
 	and their similar performance suggests that the data can be effectively separated
 	by relatively simple decision boundaries.
-
-	Figure~\ref{fig:classification_test_errors_by_fold} visualizes the outer test errors per fold for
-	the three models, clearly showing that both Logistic Regression and the Decision Tree
-	consistently outperform the baseline classifier.
 
 
 	\subsection{Interpretation of the LR model}
@@ -390,27 +375,78 @@
 	\]
 	and predicted probabilities are given by the softmax transformation.
 
-	\todo{Check this part below for mistakes / elaborate further if needed:}
+	It is important to note that the model was trained on \textit{standardized} features. The coefficients and intercepts presented in Table \ref{tab:logreg_coefs} have been mathematically "un-scaled" to be interpretable on the original feature scale. Therefore, each coefficient represents the change in log-odds for a one-unit increase in a given feature for a specific class, relative to all other classes.
 
-	The sign and magnitude of each coefficient indicate how increasing a given oxide concentration
-	affects the log-odds of a sample belonging to class $k$. Features such as
-	\texttt{Si}, \texttt{Ca}, and \texttt{Ba} were among the strongest predictors, consistent with the
-	results from the regression analysis, where these elements also exhibited large coefficients
-	in determining refractive index. This agreement suggests that the same chemical
-	components governing RI also drive differences between glass types.
+	The model learned several strong, interpretable relationships. The most significant separator appears to be Iron (\texttt{Fe}). It has large positive coefficients for all building/vehicle window and container classes, but large negative coefficients for \texttt{headlamps} (-30.7) and \texttt{tableware} (-68.2). This aligns with chemical intuition, as \texttt{headlamps} and \texttt{tableware} require high optical clarity (low iron), while other glass types can tolerate more impurities which often introduce color.
 
-	Overall, Logistic Regression achieves competitive classification accuracy with interpretable
-	coefficients, while the Decision Tree offers slightly lower performance but more explicit
-	decision boundaries.
+	Another key feature is the Refractive Index (\texttt{RI}). It has a very large positive coefficient for \texttt{headlamps} (2610) but large negative coefficients for all other types (e.g., -532 for \texttt{BW-FP}, -1960 for \texttt{VW-FP}). This suggests \texttt{RI} is a primary factor in identifying headlamp glass.
+
+	Conversely, the model strongly penalizes \texttt{tableware} for high levels of Potassium (\texttt{K}, -13.3) and Barium (\texttt{Ba}, -9.28), indicating that low concentrations of these elements are characteristic of that class. These coefficients demonstrate that the model is not just a black box, but has successfully identified distinct chemical profiles for the different glass types.
+
+	\begin{table}[htbp]
+		\centering
+		\begin{tabular}{lrrrrrr}
+			\toprule
+			& \texttt{BW-FP} & \texttt{BW-NFP} & \texttt{VW-FP} & \texttt{containers} & \texttt{headlamps} & \texttt{tableware} \\ \midrule
+			Intercept   &        843 &       1000 &      3470 &            559 &         -4730 &         -1140 \\
+			\texttt{RI} &       -532 &       -334 &     -1960 &           -290 &          2610 &           504 \\
+			\texttt{Na} &      -1.73 &       -5.60 &      -4.26 &           -3.50 &           7.14 &           7.95 \\
+			\texttt{Mg} &       3.55 &       -2.77 &       1.37 &           -2.91 &          -0.499 &           1.26 \\
+			\texttt{Al} &      -6.50 &       -6.76 &      -8.49 &            4.73 &           9.86 &           7.15 \\
+			\texttt{Si} &     -0.463 &       -5.16 &      -6.13 &           -0.950 &           9.19 &           3.51 \\
+			\texttt{K}  &       4.30 &       0.294 &      -1.45 &            2.87 &           7.28 &          -13.3 \\
+			\texttt{Ca} &       2.39 &       -2.49 &       2.05 &           -0.284 &          -1.92 &           0.249 \\
+			\texttt{Ba} &       4.30 &       -1.33 &       0.275 &            0.289 &           5.74 &          -9.28 \\
+			\texttt{Fe} &       25.7 &        27.8 &       24.7 &            20.7 &          -30.7 &           -68.2 \\ \bottomrule
+		\end{tabular}
+		\caption{Unscaled coefficients of the final \textit{multinomial} logistic regression model. Because the model is multinomial (handling more than two classes), it computes a separate set of coefficients for each class, presented here as columns. Each value represents the change in log-odds for a one-unit increase in the feature (row) for a given class (column).}
+		\label{tab:logreg_coefs}
+	\end{table}
+%		In Table~\ref{tab:logreg_coefs}, we can observe the learned coefficients for each glass type. Let us be reminded: Positive values indicate that larger
+%	(standardized) values of a feature increase the probability of belonging to that class, while negative coefficients indicate the opposite.
+%
+%	For the \textbf{BW-FP} class, the largest positive effect appears for \texttt{Mg} ($1.85$) and smaller positive contributions from \texttt{RI}, \texttt{Ba},
+%	and \texttt{Fe}, while \texttt{Na} and \texttt{Al} are strongly negative. This suggests that BW-FP glass is characterized by higher magnesium and lower aluminum
+%	content relative to other types.
+%
+%	The \textbf{BW-NFP} coefficients are overall moderate, with \texttt{Na} and \texttt{Ca} being the main negative features, and \texttt{Fe} slightly positive.
+%
+%	The \textbf{VW-FP} class is dominated by large negative coefficients on \texttt{RI}, \texttt{Al}, and \texttt{Si}, and moderate positive contributions
+%	from \texttt{Ca}, indicating that this glass type tends to have lower refractive index and aluminum content but slightly higher calcium.
+%
+%	For \textbf{containers}, the most pronounced coefficients are positive for \texttt{Al}, \texttt{Ca}, and \texttt{K}, and negative for \texttt{Na}
+%	and \texttt{Mg}, distinguishing it from the window types.
+%
+%	The \textbf{headlamps} class exhibits strong positive coefficients across nearly all elements, but strong negative weight on \texttt{Ca},
+%	suggesting higher oxide content overall.
+%
+%	Finally, the \textbf{tableware} class displays an inverse pattern, with high negative coefficients for \texttt{K}, \texttt{Ba},
+%	and \texttt{Fe}, while \texttt{Na}, \texttt{Al}, and \texttt{Ca} are slightly positive.
+
+	\section*{Closing Discussion}
+
+	As detailed and discussed throughout the report, we applied and compared various machine learning models for regression and classification tasks on the
+	Glass Identification dataset. We discovered that regularized linear regression excelled at predicting the refractive index,
+	outperforming an artificial neural network and significantly outperforming the baseline model. This indicates that the relationship between chemical
+	composition and refractive index is well captured by a simple linear model with appropriate regularization.
+
+	We where able to find a study that uses the same dataset, and tests different classification methods to identify Glass Types for forensic research.
+	The study by Goswami and Wegman \cite{GoswamiWegman2016}, found that the Decision Tree generally
+	outperformed the Logistic Regression. Their results showed that the Decision Tree handled the multiclass classification problem more effectively,
+	capturing the non-linear relationships between chemical attributes and glass types that Linear Regression could not model as easily. Linear Regression
+	performed reasonably well on simpler, binary distinctions, but showed reduced accuracy when extended to all six glass categories.
+
+	In contrast, the results of this report indicate that both the Decision Tree and the Linear Regression perform similarly, with the latter
+	slightly outperforming the other in overall classification accuracy. This suggests that, while Decision Trees may better capture complex feature interactions,
+	the linear relationships in this dataset are strong enough for Linear Regression to achieve a competitive performance, or in this case, a marginally better
+	one. Nonetheless, it is important to note that Linear Regressions are prone to overfitting, which might be the case here.
 
 
 	\section*{Use of GenAI}
 
-	Generative AI (ChatGPT by OpenAI and Claude by Anthropic) was used as a support tool during the project.
-
-	Its role was limited to assisting with code debugging, identifying and fixing minor
-	implementation errors, and -- for Diego -- writing drafts for parts of the report -- which were later
-	heavily revised to form a cohesive final report.
+	Generative AI (ChatGPT by OpenAI and Claude by Anthropic) was used as a support tool during the project. Its role was limited to assisting with code debugging, \LaTeX table formatting, identifying and fixing minor
+	implementation errors, and writing initial drafts for parts of the report which later had to be heavily
+	revised or completely redone to form a cohesive final report.
 
 	All analytical choices, data processing steps, and result interpretations were made
 	by the project members \textit{themselves} based on the actual model outputs and \textit{their} understanding of the
@@ -430,7 +466,7 @@
 	\section{Repository and supplementary materials}
 	The full notebook, scripts, and generated figures for this project are available in the project repository:
 	\begin{quote}
-	\url{https://github.com/schependom/DTU\_machine-learning-projects/tree/main}
+	\url{https://github.com/schependom/DTU\_machine-learning-projects/}
 	\end{quote}
 	This repository contains the data-loading and analysis code that produced the tables and figures cited
 	above (see the \texttt{figures/} folder for the PDF outputs referenced in the report).
