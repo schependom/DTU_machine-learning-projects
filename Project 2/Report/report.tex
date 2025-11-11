@@ -51,13 +51,13 @@
 			\centering
 			\begin{tabular}{l | *{3}{|r}}
 				\textbf{Task}                & \textbf{Vincent} & \textbf{Diego} & \textbf{Albert} \\ \hline\hline
-				Training \& test loops       & 90\%             &            10\% &             0\% \\ \hline
-				Coding visualisations        & 80\%             &           10\% &            10\% \\ \hline
-				Report writing               & 60\%             &           10\% &            30\% \\ \hline
+				Training \& test loops       & 85\%             &            10\% &             5\% \\ \hline
+				Coding visualisations        & 65\%             &           20\% &            15\% \\ \hline
+				Report writing               & 60\%             &           20\% &            20\% \\ \hline
 				Discussion \& interpretation & 40\%             &           40\% &            20\% \\ \hline
-				\LaTeX                       & 100\%            &            0\% &             0\%
+				\LaTeX                       & 80\%            &            10\% &             10\%
 			\end{tabular}
-			\caption{Contributions \& responsabilities table.}
+			\caption{Contributions \& responsibilities table.}
 			\label{table:contributions}
 		\end{subtable}
 		\caption{Group information \& work distribution.}
@@ -139,15 +139,14 @@
 	\end{align*}
 
 	These coefficients reveal the relative contribution of each oxide concentration ($\beta_1$ to $\beta_8$) and glass type
-	(one hot encoded $\beta_9$ to $\beta_{15}$) to the refractive index (\texttt{RI}). The elements \texttt{Ca} and \texttt{Ba} exhibit the largest positive coefficients, implying that increasing these oxides raises the estimated refractive index in this model.
-	Conversely, \texttt{Si}, \texttt{Al}, and \texttt{Na} have negative coefficients,
+	(one hot encoded $\beta_9$ to $\beta_{14}$) to the refractive index (\texttt{RI}). The elements \texttt{Ca}, \texttt{Na} and \texttt{Ba} exhibit the largest positive coefficients, implying that increasing these oxides raises the estimated refractive index in this model.
+	Conversely, \texttt{Si} and \texttt{Al} have negative coefficients,
 	indicating that higher concentrations of these oxides decrease the estimated refractive index. The small magnitude of coefficients for
 	\texttt{Mg} and \texttt{Fe} suggests a weaker influence on the estimated refractive index.
 
 	Most of these categorical coefficients are very small in magnitude, indicating that the glass type has a relatively minor effect
 	on the refractive index compared to the chemical composition. \texttt{VW-FP} has a negative coefficient,
-	suggesting that this type slightly decreases the predicted \texttt{RI}. \texttt{vehicle windows} has a coefficient of 0. This does not mean it has no effect in reality; rather, there were too few observations for the model to estimate its effect.
-	In this model, while the categorical glass types are included, the chemical composition dominates the predictions of \texttt{RI}.
+	suggesting that this type slightly decreases the predicted \texttt{RI}. In this model, while the categorical glass types are included, the chemical composition dominates the predictions of \texttt{RI}.
 
 
 	\subsubsection{Evaluation of the Ridge model}
@@ -218,14 +217,14 @@
 	illustrating the consistent superiority of Linear Regression over both the ANN and baseline models.
 
 	Figure~\ref{fig:ann_mse_vs_h} shows the mean squared error (MSE) on the validation set versus the number of hidden units.
-	We observe that the optimal $\hat{h}=120$ achieved the minimum average MSE of \num{1.03e-2}, indicating that a moderately sized hidden layer performs best (we can say 120 is moderate out of 960 because it is substantial but not big in the context).
+	We observe that the optimal $\hat{h}=120$ achieved the minimum average MSE of \num{0.025}, indicating that a moderately sized hidden layer performs best (we can say 120 is moderate out of 960 because it is substantial but not big in the context).
 
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.9\textwidth]{figures/ann_gen_error_vs_hidden_units.pdf}
 		\caption{Mean squared error (MSE) on the validation set versus number of hidden units $h$
 		for the artificial neural network using nested cross-validation.
-		The optimal $h$ ($\hat{h}=120$) achieved a minimum average MSE of \num{1.03e-2}.}
+		The optimal $h$ ($\hat{h}=120$) achieved a minimum average validation MSE of \num{0.025}.}
 		\label{fig:ann_mse_vs_h}
 	\end{figure}
 
@@ -247,7 +246,7 @@
 		\end{tabular}
 		\caption{Pairwise comparison of regression models (ANN = Artificial Neural Network, RLR = Regularized Linear Regression) using paired $t$-tests across outer folds.
 		Mean differences $\hat{\mu}$ and standard deviations $\hat{\sigma}$ in test error $E^{\text{test}}$, $t$-statistics, and $p$-values are reported, as well as a 95\% confidence interval $[t_{0.05}, t_{0.95}]$.
-		All comparisons show statistically significant differences ($p<0.05$).}
+		All comparisons show statistically significant differences ($p<0.05$). It should be noted that ANN-RLR and ANN-Baseline comparisons look identical due to rounding. In reality, they \textit{do} slightly differ.}
 		\label{tab:reg_pairwise}
 	\end{table}
 
@@ -304,7 +303,7 @@ These results clearly support the ranking \textbf{ANN $<$ Baseline $<$ RLR}, and
 	\end{figure}
 
 	To better visualize the wide range of test errors across models, the results are also presented in a semilogarithmic plot,
-	where the y-axis is on a logarithmic scale. This representation highlights the consistently low errors of Linear Regression
+	where the $y$-axis is on a logarithmic scale. This representation highlights the consistently low errors of Linear Regression
 	relative to the baseline and the higher errors of the ANN, making performance differences between models visually apparent.
 
 	This section compares Logistic Regression and a Decision Tree classifier against the baseline.
@@ -312,11 +311,10 @@ These results clearly support the ranking \textbf{ANN $<$ Baseline $<$ RLR}, and
 	and the maximum tree depth $h$ for the Decision Tree using inner cross-validation.
 	We then computed the test error $E_i^\text{test}$ on each outer test fold.
 
-	As shown in Table~\ref{table:e-test-classification}, the two-level cross-validation results reveal that the Decision Tree model
-	achieves the best test errors overall, outperforming the Logistic Regression in most cases, which can also be seen in Figure~\ref{fig:classification_test_errors_by_fold}
-	and also substantially surpassing the baseline. The Decision Tree is superior to
-	Logistic Regression in 7 out of 10 folds, suggesting that simple, non-overfitting structures suffice for this task. Logistic Regression hyperparameters $\lambda_i^*$ vary
-	widely (from \num{0.00428} to \SI{0.695}{}), reflecting data-dependent regularization needs. Nonetheless, it consistently beats the baseline
+	The two-level cross-validation results reveal that the Logistic Regression model
+	achieves the best test errors overall, outperforming the Decision Tree in most cases, which can also be seen in Figure~\ref{fig:classification_test_errors_by_fold}
+	and also substantially surpassing the baseline. The Logistic Regression hyperparameter $C_i^*$ vary
+	widely (from \num{0.00428} to \SI{0.695}{}) across folds, indicating data-dependent regularization needs. Nonetheless, it consistently beats the baseline
 	in all folds. Both models demonstrate robust improvements over the naive predictor, highlighting the value of even basic machine learning
 	approaches for glass type classification.
 
@@ -340,7 +338,7 @@ These results clearly support the ranking \textbf{ANN $<$ Baseline $<$ RLR}, and
 		\end{tabular}}
 		\caption{Pairwise comparison of classification models (DT = Decision Tree, LR = Logistic Regression) using paired $t$-tests across outer folds.
 		Mean differences $\hat{\mu}$ and standard deviations $\hat{\sigma}$ in test error $E^{\text{test}}$, $t$-statistics, and $p$-values are reported, as well as a 95\% confidence interval $[t_{0.05}, t_{0.95}]$.
-		All comparisons show statistically significant differences ($p<0.05$).}
+		The last two comparisons show statistically significant differences ($p<0.05$), but DT-LR is \textit{not} significant ($p=0.37$).}
 		\label{tab:cls_pairwise}
 	\end{table}
 
@@ -402,26 +400,6 @@ These results clearly support the ranking \textbf{ANN $<$ Baseline $<$ RLR}, and
 		\caption{Unscaled coefficients of the final \textit{multinomial} logistic regression model. Because the model is multinomial (handling more than two classes), it computes a separate set of coefficients for each class, presented here as columns. Each value represents the change in log-odds for a one-unit increase in the feature (row) for a given class (column).}
 		\label{tab:logreg_coefs}
 	\end{table}
-%		In Table~\ref{tab:logreg_coefs}, we can observe the learned coefficients for each glass type. Let us be reminded: Positive values indicate that larger
-%	(standardized) values of a feature increase the probability of belonging to that class, while negative coefficients indicate the opposite.
-%
-%	For the \textbf{BW-FP} class, the largest positive effect appears for \texttt{Mg} ($1.85$) and smaller positive contributions from \texttt{RI}, \texttt{Ba},
-%	and \texttt{Fe}, while \texttt{Na} and \texttt{Al} are strongly negative. This suggests that BW-FP glass is characterized by higher magnesium and lower aluminum
-%	content relative to other types.
-%
-%	The \textbf{BW-NFP} coefficients are overall moderate, with \texttt{Na} and \texttt{Ca} being the main negative features, and \texttt{Fe} slightly positive.
-%
-%	The \textbf{VW-FP} class is dominated by large negative coefficients on \texttt{RI}, \texttt{Al}, and \texttt{Si}, and moderate positive contributions
-%	from \texttt{Ca}, indicating that this glass type tends to have lower refractive index and aluminum content but slightly higher calcium.
-%
-%	For \textbf{containers}, the most pronounced coefficients are positive for \texttt{Al}, \texttt{Ca}, and \texttt{K}, and negative for \texttt{Na}
-%	and \texttt{Mg}, distinguishing it from the window types.
-%
-%	The \textbf{headlamps} class exhibits strong positive coefficients across nearly all elements, but strong negative weight on \texttt{Ca},
-%	suggesting higher oxide content overall.
-%
-%	Finally, the \textbf{tableware} class displays an inverse pattern, with high negative coefficients for \texttt{K}, \texttt{Ba},
-%	and \texttt{Fe}, while \texttt{Na}, \texttt{Al}, and \texttt{Ca} are slightly positive.
 
 	\section*{Closing Discussion}
 
@@ -444,7 +422,7 @@ These results clearly support the ranking \textbf{ANN $<$ Baseline $<$ RLR}, and
 
 	\section*{Use of GenAI}
 
-	Generative AI (ChatGPT by OpenAI and Claude by Anthropic) was used as a support tool during the project. Its role was limited to assisting with code debugging, \LaTeX table formatting, identifying and fixing minor
+	Generative AI (\textit{ChatGPT} by OpenAI and \textit{Claude} by Anthropic) was used as a support tool during the project. Its role was limited to assisting with code debugging, \LaTeX table formatting, identifying and fixing minor
 	implementation errors, and writing initial drafts for parts of the report which later had to be heavily
 	revised or completely redone to form a cohesive final report.
 
